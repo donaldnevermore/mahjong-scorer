@@ -1,0 +1,12 @@
+# IDEs
+.vscode/
+.idea/
+.vs/
+
+# Compiled
+bin/
+obj/
+
+# User-specific
+*.user
+global.json
