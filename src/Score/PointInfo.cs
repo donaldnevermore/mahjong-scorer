@@ -57,11 +57,6 @@ namespace MahjongScorer.Score {
                 return;
             }
 
-            CountHan();
-            CountPoint();
-        }
-
-        private void CountHan() {
             var hanWithoutDoraAndYakuman = 0;
 
             foreach (var yaku in YakuList) {
@@ -74,19 +69,14 @@ namespace MahjongScorer.Score {
                 }
             }
 
-            // 6 times Yakuman at most.
-            if (YakumanTimes >= 6) {
-                YakumanTimes = 6;
-            }
-
             if (HasYakuman) {
+                // 6 times Yakuman at most.
+                YakumanTimes = Math.Min(6, YakumanTimes);
                 BasePoints = Yakuman * YakumanTimes;
                 Han = YakumanTimes * YakumanBaseHan;
             }
             else {
-                Debug.Assert(hand is not null);
                 Han = hanWithoutDoraAndYakuman + hand.DoraInfo.TotalDora;
-
                 if (Han >= 13) {
                     // 13 Han at most.
                     Han = 13;
@@ -105,15 +95,12 @@ namespace MahjongScorer.Score {
                     BasePoints = Mangan;
                 }
                 else {
-                    // Calculate Fu value.
+                    Fu = FuCalculator.CountFu(FuList);
+                    // Calculate base points.
                     var point = Fu * (int)Math.Pow(2, Han + 2);
                     BasePoints = Math.Min(Mangan, point);
                 }
             }
-        }
-
-        private void CountPoint() {
-            Debug.Assert(hand is not null && round is not null);
 
             if (round.IsDealer) {
                 if (hand.Tsumo) {
