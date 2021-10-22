@@ -44,6 +44,10 @@ namespace MahjongScorer.Score {
                 : result;
         }
 
+        public void Reset() {
+            result.Clear();
+        }
+
         private void CountYaku() {
             Riichi();
             Tanyao();

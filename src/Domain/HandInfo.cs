@@ -10,7 +10,7 @@ namespace MahjongScorer.Domain {
         public Tile WinningTile { get; init; }
         public IList<Meld> OpenMelds { get; init; }
 
-        public Tile[] AllTiles() {
+        public List<Tile> AllTiles() {
             var list = new List<Tile>();
             list.AddRange(HandTiles);
             list.Add(WinningTile);
@@ -19,7 +19,9 @@ namespace MahjongScorer.Domain {
                 list.AddRange(meld.Tiles);
             }
 
-            return list.ToArray();
+            list.Sort();
+
+            return list;
         }
     }
 }

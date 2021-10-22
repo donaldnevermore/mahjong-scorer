@@ -7,9 +7,6 @@ using System.Collections.Generic;
 
 namespace MahjongScorer.Domain {
     public class Tile : IComparable<Tile> {
-        public static readonly IEqualityComparer<Tile>
-            TileIgnoreColorEqualityComparer = new TileIgnoreColorEqualityComparerImpl();
-
         public Suit Suit { get; }
         public int Rank { get; }
         public bool IsRed { get; }
@@ -19,7 +16,7 @@ namespace MahjongScorer.Domain {
         public bool IsYaochuu => IsHonor || IsRoto;
 
         public Tile(Suit suit, int rank, bool isRed = false) {
-            if (rank <= 0 || rank > 9) {
+            if (rank < 1 || rank > 9) {
                 throw new ArgumentException("Index must be within the range of 1 and 9.");
             }
             if (suit == Suit.Z && Rank > 7) {
@@ -109,32 +106,6 @@ namespace MahjongScorer.Domain {
 
         public override int GetHashCode() {
             return ToString().GetHashCode();
-        }
-
-        public int GetHashCode(Tile obj) {
-            var hash = (int)obj.Suit;
-            hash = hash * 31 + obj.Rank;
-            hash = hash * 31 + (obj.IsRed ? 1 : 0);
-            return hash;
-        }
-
-        private struct TileIgnoreColorEqualityComparerImpl : IEqualityComparer<Tile> {
-            public bool Equals(Tile? x, Tile? y) {
-                if (x is null && y is null) {
-                    return true;
-                }
-                if (x is null || y is null) {
-                    return false;
-                }
-
-                return x.EqualsIgnoreColor(y);
-            }
-
-            public int GetHashCode(Tile obj) {
-                var hash = (int)obj.Suit;
-                hash = hash * 31 + obj.Rank;
-                return hash;
-            }
         }
     }
 }

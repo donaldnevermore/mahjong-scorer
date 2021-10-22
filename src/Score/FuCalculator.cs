@@ -67,20 +67,18 @@ namespace MahjongScorer.Score {
         private static void CountMeldPattern(IList<Meld> decompose, Tile winningTile,
             HandConfig hand, RoundConfig round, RuleConfig rule, IList<FuValue> result) {
             foreach (var meld in decompose) {
+                var isOpen = meld.IsOpen || (!hand.Tsumo && meld.ContainsIgnoreColor(winningTile));
+
                 switch (meld.Type) {
                 case MeldType.Pair:
                     CountPair(meld, round, rule, result);
                     break;
-                case MeldType.Triplet: {
-                    var isOpen = meld.IsOpen || (!hand.Tsumo && meld.ContainsIgnoreColor(winningTile));
+                case MeldType.Triplet:
                     CountTriplet(meld, isOpen, result);
                     break;
-                }
-                case MeldType.Quad: {
-                    var isOpen = meld.IsOpen || (!hand.Tsumo && meld.ContainsIgnoreColor(winningTile));
+                case MeldType.Quad:
                     CountQuad(meld, isOpen, result);
                     break;
-                }
                 }
             }
         }
@@ -178,7 +176,7 @@ namespace MahjongScorer.Score {
                 case MeldType.Pair:
                     result.Add(new FuValue(FuType.SingleWait, 2));
                     break;
-                case MeldType.Sequence: {
+                case MeldType.Sequence:
                     if (winningTile.EqualsIgnoreColor(meld.Tiles[1])) {
                         result.Add(new FuValue(FuType.MiddleWait, 2));
                     }
@@ -187,7 +185,6 @@ namespace MahjongScorer.Score {
                         result.Add(new FuValue(FuType.EndWait, 2));
                     }
                     break;
-                }
                 }
             }
         }

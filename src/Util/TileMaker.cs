@@ -2,8 +2,8 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using MahjongScorer.Domain;
 
 namespace MahjongScorer.Util {
@@ -14,27 +14,47 @@ namespace MahjongScorer.Util {
         /// <param name="s"></param>
         /// <returns></returns>
         public static IList<Tile> ConvertTiles(string s) {
-            var list = new List<Tile>();
-            var suit = Suit.M;
+            var result = new List<Tile>();
+            var ranks = new List<int>();
 
             for (var i = 0; i < s.Length; i++) {
                 switch (s[i]) {
                 case 'm':
-                    suit = Suit.P;
+                    result.AddRange(ConvertSuit(Suit.M, ranks));
+                    ranks.Clear();
                     break;
                 case 'p':
-                    suit = Suit.S;
+                    result.AddRange(ConvertSuit(Suit.P, ranks));
+                    ranks.Clear();
                     break;
                 case 's':
-                    suit = Suit.Z;
+                    result.AddRange(ConvertSuit(Suit.S, ranks));
+                    ranks.Clear();
                     break;
                 case 'z':
-                    return list;
+                    result.AddRange(ConvertSuit(Suit.Z, ranks));
+                    ranks.Clear();
+                    break;
                 default:
                     var rank = s[i] - '0';
-                    list.Add(new Tile(suit, rank));
+                    ranks.Add(rank);
                     break;
                 }
+            }
+
+            return result;
+        }
+
+        public static Tile ConvertTile(string s) {
+            var tiles = ConvertTiles(s);
+            return tiles[0];
+        }
+
+        private static IList<Tile> ConvertSuit(Suit s, IList<int> ranks) {
+            var list = new List<Tile>();
+
+            foreach (var r in ranks) {
+                list.Add(new Tile(s, r));
             }
 
             return list;
@@ -45,8 +65,16 @@ namespace MahjongScorer.Util {
 
             foreach (var s in melds) {
                 var tiles = ConvertTiles(s);
-                // TODO: fix
-                // meldList.Add(new Meld(true, tiles));
+                switch (tiles.Count) {
+                case 3:
+                    meldList.Add(new Meld(true, tiles[0], tiles[1], tiles[2]));
+                    break;
+                case 4:
+                    meldList.Add(new Meld(true, tiles[0], tiles[1], tiles[2], tiles[3]));
+                    break;
+                default:
+                    throw new ArgumentException(nameof(melds));
+                }
             }
 
             return meldList;

@@ -8,9 +8,9 @@ namespace MahjongScorer.Util {
     public static class HandMaker {
         public static HandInfo GetHandInfo(string handTiles, string winningTile, string[] openMelds) {
             var h = TileMaker.ConvertTiles(handTiles);
-            var w = TileMaker.ConvertTiles(winningTile);
+            var w = TileMaker.ConvertTile(winningTile);
             var m = TileMaker.ConvertMelds(openMelds);
-            return new HandInfo { HandTiles = h, WinningTile = w[0], OpenMelds = m };
+            return new HandInfo { HandTiles = h, WinningTile = w, OpenMelds = m };
         }
     }
 }

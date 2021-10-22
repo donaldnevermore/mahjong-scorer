@@ -9,9 +9,6 @@ using System.Text;
 
 namespace MahjongScorer.Domain {
     public class Meld : IComparable<Meld> {
-        public static readonly IEqualityComparer<Meld> MeldIgnoreColorEqualityComparer =
-            new MeldIgnoreColorEqualityComparerImpl();
-
         public MeldType Type { get; }
         public Tile[] Tiles { get; }
         public bool IsOpen { get; }
@@ -111,13 +108,11 @@ namespace MahjongScorer.Domain {
 
         public override string ToString() {
             var builder = new StringBuilder();
-            foreach (var tile in Tiles) {
-                builder.Append(tile.ToStringIgnoreColor());
-            }
 
-            if (IsOpen) {
-                builder.Append("open");
+            foreach (var tile in Tiles) {
+                builder.Append(tile.Rank.ToString());
             }
+            builder.Append(Suit.ToString().ToLower());
 
             return builder.ToString();
         }
@@ -171,35 +166,6 @@ namespace MahjongScorer.Domain {
                 return false;
             }
             return tile.Rank >= Tiles[0].Rank && tile.Rank <= Tiles[^1].Rank;
-        }
-
-        private struct MeldIgnoreColorEqualityComparerImpl : IEqualityComparer<Meld> {
-            public bool Equals(Meld? x, Meld? y) {
-                if (x is null && y is null) {
-                    return true;
-                }
-                if (x is null || y is null) {
-                    return false;
-                }
-
-                if (x.Type != y.Type || x.IsOpen != y.IsOpen) {
-                    return false;
-                }
-                if (x.Tiles.Length != y.Tiles.Length) {
-                    return false;
-                }
-                for (var i = 0; i < x.Tiles.Length; i++) {
-                    if (!x.Tiles[i].EqualsIgnoreColor(y.Tiles[i])) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            public int GetHashCode(Meld obj) {
-                return obj.ToString().GetHashCode();
-            }
         }
     }
 }

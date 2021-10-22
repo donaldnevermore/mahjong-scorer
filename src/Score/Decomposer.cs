@@ -45,62 +45,51 @@ namespace MahjongScorer.Score {
             return result;
         }
 
-        /// <summary>
-
-        /// </summary>
-        /// <param name="decompose"></param>
-        /// <param name="winningTile"></param>
-        /// <returns></returns>
-        public static bool WinningTileInOthers(IList<Meld> decompose, Tile winningTile) {
-            return decompose.Any(meld =>
-                !meld.IsOpen &&
-                (meld.Type == MeldType.Pair || meld.Type == MeldType.Sequence) &&
-                meld.ContainsIgnoreColor(winningTile));
-        }
-
         private static void AnalyzeHand(int[] hand, HashSet<List<Meld>> decomposes) {
-            AnalyzeNormal(hand, decomposes);
+            AnalyzeMentsuAndPair(hand, decomposes);
             Analyze7Pairs(hand, decomposes);
             Analyze13Orphans(hand, decomposes);
         }
 
         /// <summary>
-        /// Analyze normal Hora.
+        /// Analyze 4 Mentsu (Triplet, Sequence, or Quad) + 1 Pair.
         /// </summary>
-        private static void AnalyzeNormal(int[] hand, HashSet<List<Meld>> result) {
+        private static void AnalyzeMentsuAndPair(int[] hand, HashSet<List<Meld>> result) {
             var suitCount = new int[4];
             for (var i = 0; i < 34; i++) {
                 suitCount[i / 9] += hand[i];
             }
 
-            // Remainder of each suit must be 0 or 2.
-            var remainderOfZero = 0;
-            var suitOfTwo = -1;
+            var completeMentsuCount = 0;
+            var incompleteSuit = -1;
+
             for (var i = 0; i < suitCount.Length; i++) {
+                // Remainder of each suit must be 0 or 2.
                 if (suitCount[i] % 3 == 1) {
                     return;
                 }
+
                 if (suitCount[i] % 3 == 0) {
-                    remainderOfZero++;
+                    completeMentsuCount++;
                 }
                 else if (suitCount[i] % 3 == 2) {
-                    suitOfTwo = i;
+                    incompleteSuit = i;
                 }
             }
 
-            if (remainderOfZero != 3) {
+            if (completeMentsuCount != 3) {
                 return;
             }
 
-            FindCompleteForm(suitOfTwo, hand, result);
+            FindCompleteForm(incompleteSuit, hand, result);
         }
 
         /// <summary>
         /// Find pairs, triplets, and sequences.
         /// </summary>
-        private static void FindCompleteForm(int suitOfTwo, int[] hand, HashSet<List<Meld>> result) {
-            var suit = (Suit)suitOfTwo;
-            var start = suitOfTwo * 9;
+        private static void FindCompleteForm(int incompleteSuit, int[] hand, HashSet<List<Meld>> result) {
+            var suit = (Suit)incompleteSuit;
+            var start = incompleteSuit * 9;
             var end = suit == Suit.Z ? start + 7 : start + 9;
 
             for (var index = start; index < end; index++) {
@@ -154,7 +143,7 @@ namespace MahjongScorer.Score {
             }
 
             // Find sequences.
-            if (tile.Suit != Suit.Z && tile.Rank <= 7 && hand[index + 1] > 0 && hand[index + 2] > 0) {
+            if (!tile.IsHonor && tile.Rank <= 7 && hand[index + 1] > 0 && hand[index + 2] > 0) {
                 hand[index]--;
                 hand[index + 1]--;
                 hand[index + 2]--;
@@ -173,6 +162,11 @@ namespace MahjongScorer.Score {
             }
         }
 
+        /// <summary>
+        /// 7 Pairs.
+        /// </summary>
+        /// <param name="hand"></param>
+        /// <param name="result"></param>
         private static void Analyze7Pairs(int[] hand, HashSet<List<Meld>> result) {
             if (hand.Sum() != 14) {
                 return;
@@ -197,7 +191,7 @@ namespace MahjongScorer.Score {
         }
 
         /// <summary>
-        /// Kokushi.
+        /// 13 Orphans.
         /// </summary>
         /// <param name="hand"></param>
         /// <param name="result"></param>

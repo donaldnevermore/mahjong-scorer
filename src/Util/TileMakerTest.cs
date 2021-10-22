@@ -22,6 +22,23 @@ namespace MahjongScorer.Util {
         }
 
         [Test]
+        public void TestConvertTile() {
+            var t = TileMaker.ConvertTile("2m");
+            var want = new Tile(Suit.M, 2);
+            Assert.AreEqual(want, t);
+        }
+
+        [Test]
+        public void TestConvertMelds() {
+            var m = TileMaker.ConvertMelds(new[] { "234m" });
+            var t1 = new Tile(Suit.M, 2);
+            var t2 = new Tile(Suit.M, 3);
+            var t3 = new Tile(Suit.M, 4);
+            var meld = new Meld(true, t1, t2, t3);
+            Assert.AreEqual(meld, m[0]);
+        }
+
+        [Test]
         public void TestGetGreenTiles() {
             var got = TileMaker.GetGreenTiles();
             var want = new[] { 19, 20, 21, 23, 25, 32 };
