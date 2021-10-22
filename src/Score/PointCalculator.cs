@@ -20,7 +20,7 @@ namespace MahjongScorer.Score {
             this.rule = rule;
         }
 
-        public PointInfo GetPoints() {
+        public PointInfo GetTotalPoints() {
             var decomposes = Decomposer.Decompose(handInfo);
             if (decomposes.Count == 0) {
                 return new PointInfo();
@@ -47,8 +47,8 @@ namespace MahjongScorer.Score {
         }
 
         private PointInfo CountHanAndFu(IList<YakuValue> yakuList, IList<FuValue> fuList) {
-            var info = new PointInfo(yakuList, fuList, handConfig, round);
-            info.CountHanAndFu();
+            var info = new PointInfo(yakuList, fuList, handConfig, round, rule);
+            info.CountAll();
             return info;
         }
 

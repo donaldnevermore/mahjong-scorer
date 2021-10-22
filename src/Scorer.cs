@@ -10,23 +10,42 @@ using MahjongScorer.Util;
 
 namespace MahjongScorer {
     public static class Scorer {
-        public static void GetScore(string handTiles, string winningTile, string[] openMelds, HandConfig handConfig,
-            RoundConfig round, RuleConfig rule) {
+        public static PointInfo GetScore(string handTiles, string winningTile, string[] openMelds,
+            HandConfig handConfig, RoundConfig round, RuleConfig rule) {
             var handInfo = HandMaker.GetHandInfo(handTiles, winningTile, openMelds);
-            GetScore(handInfo, handConfig, round, rule);
+            return GetHandScore(handInfo, handConfig, round, rule);
         }
 
-        public static void GetScore(HandInfo handInfo, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
-            var r = new PointCalculator(handInfo, handConfig, round, rule);
-            var s = r.GetPoints();
-            if (s.DealerTsumo is not null) {
-                Console.WriteLine(s.DealerTsumo);
+        public static PointInfo GetHandScore(HandInfo handInfo, HandConfig handConfig,
+            RoundConfig round, RuleConfig rule) {
+            var pc = new PointCalculator(handInfo, handConfig, round, rule);
+            var pt = pc.GetTotalPoints();
+            return pt;
+        }
+
+        public static void ShowScore(string handTiles, string winningTile, string[] openMelds,
+            HandConfig handConfig, RoundConfig round, RuleConfig rule) {
+            var pt = GetScore(handTiles, winningTile, openMelds, handConfig, round, rule);
+            ShowPointInfo(pt);
+        }
+
+        public static void ShowHandScore(HandInfo handInfo, HandConfig handConfig,
+            RoundConfig round, RuleConfig rule) {
+            var pt = GetHandScore(handInfo, handConfig, round, rule);
+            ShowPointInfo(pt);
+        }
+
+        public static void ShowPointInfo(PointInfo pt) {
+            Console.WriteLine(pt);
+
+            if (pt.DealerTsumo is not null) {
+                Console.WriteLine(pt.DealerTsumo);
             }
-            else if (s.NonDealerTsumo is not null) {
-                Console.WriteLine(s.NonDealerTsumo);
+            else if (pt.NonDealerTsumo is not null) {
+                Console.WriteLine(pt.NonDealerTsumo);
             }
-            else if (s.Ron is not null) {
-                Console.WriteLine(s.Ron);
+            else if (pt.Ron is not null) {
+                Console.WriteLine(pt.Ron);
             }
         }
     }

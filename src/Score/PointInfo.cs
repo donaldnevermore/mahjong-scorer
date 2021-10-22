@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using MahjongScorer.Domain;
 using MahjongScorer.Config;
@@ -19,14 +18,14 @@ namespace MahjongScorer.Score {
         public int BasePoints { get; private set; } = 0;
         public int Han { get; private set; } = 0;
         public int Fu { get; private set; } = 0;
-        public bool HasYakuman { get; private set; } = false;
-        public int YakumanTimes { get; private set; } = 0;
+        public int YakumanCount { get; private set; } = 0;
 
         public IList<YakuValue> YakuList { get; }
         public IList<FuValue> FuList { get; }
 
-        private HandConfig? hand = null;
-        private RoundConfig? round = null;
+        private HandConfig hand;
+        private RoundConfig round;
+        private RuleConfig rule;
 
         // Yaku base points.
         private const int Mangan = 2000;
@@ -34,74 +33,87 @@ namespace MahjongScorer.Score {
         private const int Baiman = 4000;
         private const int Sanbaiman = 6000;
         private const int Yakuman = 8000;
-        private const int AccumulatedYakuman = 8000;
-        private const int YakumanBaseHan = 13;
 
         public PointInfo() {
             YakuList = new List<YakuValue>();
             FuList = new List<FuValue>();
+            hand = new HandConfig();
+            round = new RoundConfig();
+            rule = new RuleConfig();
         }
 
-        public PointInfo(IList<YakuValue> yakuList, IList<FuValue> fuList, HandConfig hand, RoundConfig round) {
+        public PointInfo(IList<YakuValue> yakuList, IList<FuValue> fuList,
+            HandConfig hand, RoundConfig round, RuleConfig rule) {
             YakuList = yakuList;
             FuList = fuList;
             this.hand = hand;
             this.round = round;
+            this.rule = rule;
         }
 
-        public void CountHanAndFu() {
+        public void CountAll() {
             if (YakuList.Count == 0) {
                 return;
             }
-            if (hand is null || round is null) {
-                return;
-            }
 
+            CountHanAndFu();
+            UpdatePointResult();
+        }
+
+        private void CountHanAndFu() {
             var hanWithoutDoraAndYakuman = 0;
 
             foreach (var yaku in YakuList) {
                 if (yaku.IsYakuman) {
-                    HasYakuman = true;
-                    YakumanTimes += yaku.Value;
+                    YakumanCount += yaku.Value;
                 }
                 else {
                     hanWithoutDoraAndYakuman += yaku.Value;
                 }
             }
 
-            if (HasYakuman) {
-                // 6 times Yakuman at most.
-                YakumanTimes = Math.Min(6, YakumanTimes);
-                BasePoints = Yakuman * YakumanTimes;
-                Han = YakumanTimes * YakumanBaseHan;
+            if (YakumanCount <= 0) {
+                Han = hanWithoutDoraAndYakuman + hand.DoraInfo.TotalDora;
+                CountNonYakumanBasePoints();
             }
             else {
-                Han = hanWithoutDoraAndYakuman + hand.DoraInfo.TotalDora;
-                if (Han >= 13) {
-                    // 13 Han at most.
-                    Han = 13;
-                    BasePoints = AccumulatedYakuman;
-                }
-                else if (Han >= 11) {
-                    BasePoints = Sanbaiman;
-                }
-                else if (Han >= 8) {
-                    BasePoints = Baiman;
-                }
-                else if (Han >= 6) {
-                    BasePoints = Haneman;
-                }
-                else if (Han >= 5) {
+                // Handle Yakuman.
+                YakumanCount = rule.MultipleYakuman ? YakumanCount : 1;
+                BasePoints = Yakuman * YakumanCount;
+            }
+        }
+
+        private void CountNonYakumanBasePoints() {
+            if (rule.AccumulatedYakuman && Han >= 13) {
+                YakumanCount = 1;
+                BasePoints = Yakuman;
+            }
+            else if (Han >= 11) {
+                BasePoints = Sanbaiman;
+            }
+            else if (Han >= 8) {
+                BasePoints = Baiman;
+            }
+            else if (Han >= 6) {
+                BasePoints = Haneman;
+            }
+            else if (Han >= 5) {
+                BasePoints = Mangan;
+            }
+            else {
+                Fu = FuCalculator.CountFu(FuList);
+                // Calculate base points.
+                var point = Fu * (int)Math.Pow(2, Han + 2);
+                if (rule.RoundUpMangan && point >= 1920) {
                     BasePoints = Mangan;
                 }
                 else {
-                    Fu = FuCalculator.CountFu(FuList);
-                    // Calculate base points.
-                    var point = Fu * (int)Math.Pow(2, Han + 2);
                     BasePoints = Math.Min(Mangan, point);
                 }
             }
+        }
 
+        private void UpdatePointResult() {
             if (round.IsDealer) {
                 if (hand.Tsumo) {
                     var n = NumberUtil.RoundUpToNextUnit(BasePoints * 2, 100);
@@ -134,8 +146,8 @@ namespace MahjongScorer.Score {
                 ? ""
                 : string.Join(", ", FuList.Select(fu => fu.ToString()));
 
-            return $"Han = {Han}, Fu = {Fu}, BasePoints = {BasePoints},\n" +
-                $"Dora = {hand?.DoraInfo}, \nYaku = [{yakuDetail}], \nFu = [{fuDetail}]";
+            return $"Han = {Han}, Fu = {Fu}, BasePoints = {BasePoints}, " +
+                $"{hand.DoraInfo}\nYaku = [{yakuDetail}]\nFu = [{fuDetail}]";
         }
 
         public int CompareTo(PointInfo? other) {

@@ -22,8 +22,8 @@ namespace MahjongScorer.Score {
         }
 
         public override string ToString() {
-            return $"BaseGain = {BaseGain}, DealerBasePay = {DealerBasePay}, NonDealerBasePay = {NonDealerBasePay}" +
-                $"TotalGain = {TotalGain}, TotalDealerPay = {TotalDealerPay}, TotalNonDealerPay = {TotalNonDealerPay}";
+            return $"Tsumo: BaseGain = {BaseGain}, DealerBasePay = {DealerBasePay}, " +
+                $"NonDealerBasePay = {NonDealerBasePay} ({TotalGain}, {TotalDealerPay}, {TotalNonDealerPay})";
         }
     }
 }

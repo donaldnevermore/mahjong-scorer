@@ -424,7 +424,7 @@ namespace MahjongScorer.Score {
                 }
                 else {
                     result.Add(new YakuValue(YakuType.SingleWaitFourConcealedTriplets,
-                        rule.DoubleYakumanValue, true));
+                        rule.AllowDoubleYakuman ? 2 : 1, true));
                 }
             }
             else if (count == 3 && !hasOneOpen) {
@@ -540,7 +540,7 @@ namespace MahjongScorer.Score {
             var pair = decompose.First(meld => meld.Type == MeldType.Pair);
             if (pair.ContainsIgnoreColor(winningTile)) {
                 result.Add(new YakuValue(YakuType.ThirteenWaitThirteenOrphans,
-                    rule.DoubleYakumanValue, true));
+                    rule.AllowDoubleYakuman ? 2 : 1, true));
             }
             else {
                 result.Add(new YakuValue(YakuType.ThirteenOrphans, 1, true));
@@ -581,7 +581,7 @@ namespace MahjongScorer.Score {
             var isTrueNineGates = counts[winningTile.Rank - 1] == 2 || counts[winningTile.Rank - 1] == 4;
             if (isTrueNineGates) {
                 result.Add(new YakuValue(YakuType.TrueNineGates,
-                    rule.DoubleYakumanValue, true));
+                    rule.AllowDoubleYakuman ? 2 : 1, true));
             }
             else {
                 result.Add(new YakuValue(YakuType.NineGates, 1, true));
@@ -613,7 +613,7 @@ namespace MahjongScorer.Score {
 
             if (tripletFlag == Flag) {
                 result.Add(new YakuValue(YakuType.FourBigWinds,
-                    rule.DoubleYakumanValue, true));
+                    rule.AllowDoubleYakuman ? 2 : 1, true));
             }
             else if ((tripletFlag | pairFlag) == Flag && pairFlag != Flag) {
                 result.Add(new YakuValue(YakuType.FourLittleWinds, 1, true));

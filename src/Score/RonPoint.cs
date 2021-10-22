@@ -19,8 +19,8 @@ namespace MahjongScorer.Score {
         }
 
         public override string ToString() {
-            return $"BaseGain = {BaseGain}, BasePayOnOne = {BasePayOnOne}, " +
-                $"TotalGain = {TotalGain}, TotalPayOnOne = {TotalPayOnOne}";
+            return $"Ron: BaseGain = {BaseGain}, BasePayOnOne = {BasePayOnOne}" +
+                $" ({TotalGain}, {TotalPayOnOne})";
         }
     }
 }

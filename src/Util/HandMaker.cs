@@ -10,7 +10,7 @@ namespace MahjongScorer.Util {
             var h = TileMaker.ConvertTiles(handTiles);
             var w = TileMaker.ConvertTile(winningTile);
             var m = TileMaker.ConvertMelds(openMelds);
-            return new HandInfo { HandTiles = h, WinningTile = w, OpenMelds = m };
+            return new HandInfo(h, w, m);
         }
     }
 }

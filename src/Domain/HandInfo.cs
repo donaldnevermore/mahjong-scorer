@@ -10,6 +10,12 @@ namespace MahjongScorer.Domain {
         public Tile WinningTile { get; init; }
         public IList<Meld> OpenMelds { get; init; }
 
+        public HandInfo(IList<Tile> handTiles, Tile winningTile, IList<Meld> openMelds) {
+            HandTiles = handTiles;
+            WinningTile = winningTile;
+            OpenMelds = openMelds;
+        }
+
         public List<Tile> AllTiles() {
             var list = new List<Tile>();
             list.AddRange(HandTiles);

@@ -95,7 +95,7 @@ namespace MahjongScorer.Score {
             // Double Wind
             else if (pair.Tiles[0].EqualsIgnoreColor(round.SeatWindTile) &&
                 pair.Tiles[0].EqualsIgnoreColor(round.RoundWindTile)) {
-                result.Add(new FuValue(FuType.DoubleWind, rule.DoubleWindFu));
+                result.Add(new FuValue(FuType.DoubleWind, rule.DoubleWindFu ? 4 : 2));
             }
             else if (pair.Tiles[0].EqualsIgnoreColor(round.SeatWindTile)) {
                 result.Add(new FuValue(FuType.SeatWind, 2));
@@ -106,51 +106,39 @@ namespace MahjongScorer.Score {
         }
 
         private static void CountTriplet(Meld meld, bool isOpen, IList<FuValue> result) {
-            var fu = 2;
-
             if (isOpen) {
                 if (meld.IsYaochuu) {
-                    fu *= 2;
-                    result.Add(new FuValue(FuType.OpenTripletYaochuu, fu));
+                    result.Add(new FuValue(FuType.OpenTripletYaochuu, 4));
                 }
                 else {
-                    result.Add(new FuValue(FuType.OpenTriplet, fu));
+                    result.Add(new FuValue(FuType.OpenTriplet, 2));
                 }
             }
             else {
-                fu *= 2;
-
                 if (meld.IsYaochuu) {
-                    fu *= 2;
-                    result.Add(new FuValue(FuType.ClosedTripletYaochuu, fu));
+                    result.Add(new FuValue(FuType.ClosedTripletYaochuu, 8));
                 }
                 else {
-                    result.Add(new FuValue(FuType.ClosedTriplet, fu));
+                    result.Add(new FuValue(FuType.ClosedTriplet, 4));
                 }
             }
         }
 
         private static void CountQuad(Meld meld, bool isOpen, IList<FuValue> result) {
-            var fu = 8;
-
             if (isOpen) {
                 if (meld.IsYaochuu) {
-                    fu *= 2;
-                    result.Add(new FuValue(FuType.OpenQuadYaochuu, fu));
+                    result.Add(new FuValue(FuType.OpenQuadYaochuu, 16));
                 }
                 else {
-                    result.Add(new FuValue(FuType.OpenQuad, fu));
+                    result.Add(new FuValue(FuType.OpenQuad, 8));
                 }
             }
             else {
-                fu *= 2;
-
                 if (meld.IsYaochuu) {
-                    fu *= 2;
-                    result.Add(new FuValue(FuType.ClosedQuadYaochuu, fu));
+                    result.Add(new FuValue(FuType.ClosedQuadYaochuu, 32));
                 }
                 else {
-                    result.Add(new FuValue(FuType.ClosedQuad, fu));
+                    result.Add(new FuValue(FuType.ClosedQuad, 16));
                 }
             }
         }

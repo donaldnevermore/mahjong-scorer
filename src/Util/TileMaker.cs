@@ -60,6 +60,12 @@ namespace MahjongScorer.Util {
             return list;
         }
 
+        /// <summary>
+        /// Convert string array to open melds.
+        /// </summary>
+        /// <param name="melds"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static IList<Meld> ConvertMelds(string[] melds) {
             var meldList = new List<Meld>();
 
