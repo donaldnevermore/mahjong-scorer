@@ -4,7 +4,7 @@
 
 using System;
 
-namespace MahjongSharp.Domain {
+namespace MahjongScorer.Domain {
     public record FuValue : IComparable<FuValue> {
         public FuType Name { get; }
         public int Value { get; }

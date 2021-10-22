@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Config {
     public class RuleConfig {
         /// <summary>
         /// Must be 2 or 4.

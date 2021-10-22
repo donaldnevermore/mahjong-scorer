@@ -4,10 +4,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using MahjongSharp.Domain;
-using MahjongSharp.Util;
+using MahjongScorer.Domain;
+using MahjongScorer.Config;
+using MahjongScorer.Util;
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Score {
     public class FuCalculator {
         /// <summary>
         /// Count Fu by taking the hand composition into consideration in terms of tile melds,

@@ -3,11 +3,12 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 using System;
-using MahjongSharp.Domain;
+using MahjongScorer.Domain;
+using MahjongScorer.Util;
+using MahjongScorer.Config;
 using NUnit.Framework;
-using MahjongSharp.Util;
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Score {
     [TestFixture]
     public class PointCalculatorTest {
         [Test]

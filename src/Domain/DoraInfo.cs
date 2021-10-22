@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
-namespace MahjongSharp.Domain {
+namespace MahjongScorer.Domain {
     public class DoraInfo {
         public int Dora { get; set; } = 0;
 

@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
-namespace MahjongSharp.Util {
+namespace MahjongScorer.Util {
     public static class NumberUtil {
         /// <summary>
         /// Round up to next unit.

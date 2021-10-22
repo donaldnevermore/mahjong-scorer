@@ -2,9 +2,9 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
-using MahjongSharp.Domain;
+using MahjongScorer.Domain;
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Config {
     public class RoundConfig {
         public Wind RoundWind { get; set; } = Wind.East;
         public Wind SeatWind { get; set; } = Wind.East;

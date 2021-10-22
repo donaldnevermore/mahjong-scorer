@@ -5,10 +5,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using MahjongSharp.Domain;
-using MahjongSharp.Util;
+using MahjongScorer.Domain;
+using MahjongScorer.Config;
+using MahjongScorer.Util;
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Score {
     public class YakuCalculator {
         private readonly IList<Meld> decompose;
         private readonly Tile winningTile;

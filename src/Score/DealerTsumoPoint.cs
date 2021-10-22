@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Score {
     public record DealerTsumoPoint {
         public int BasePayOnAll { get; } = 0;
         public int BaseGain => BasePayOnAll * 3;

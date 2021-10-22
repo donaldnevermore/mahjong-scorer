@@ -4,7 +4,7 @@
 
 using System;
 
-namespace MahjongSharp.Domain {
+namespace MahjongScorer.Domain {
     public record YakuValue : IComparable<YakuValue> {
         public YakuType Name { get; }
         public int Value { get; }

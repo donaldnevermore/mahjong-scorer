@@ -4,7 +4,7 @@
 
 using NUnit.Framework;
 
-namespace MahjongSharp.Util {
+namespace MahjongScorer.Util {
     [TestFixture]
     public class NumberUtilTest {
         [Test]

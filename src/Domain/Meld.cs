@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MahjongSharp.Domain {
+namespace MahjongScorer.Domain {
     public class Meld : IComparable<Meld> {
         public static readonly IEqualityComparer<Meld> MeldIgnoreColorEqualityComparer =
             new MeldIgnoreColorEqualityComparerImpl();

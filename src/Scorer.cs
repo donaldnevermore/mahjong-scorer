@@ -3,28 +3,20 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 using System;
-using MahjongSharp.Domain;
-using MahjongSharp.Score;
-using MahjongSharp.Util;
+using MahjongScorer.Domain;
+using MahjongScorer.Score;
+using MahjongScorer.Config;
+using MahjongScorer.Util;
 
-namespace MahjongSharp {
-    public class Scorer {
-        private HandConfig handConfig;
-        private RoundConfig round;
-        private RuleConfig rule;
-
-        public Scorer(HandConfig handConfig, RoundConfig round, RuleConfig rule) {
-            this.handConfig = handConfig;
-            this.round = round;
-            this.rule = rule;
+namespace MahjongScorer {
+    public static class Scorer {
+        public static void GetScore(string handTiles, string winningTile, string[] openMelds, HandConfig handConfig,
+            RoundConfig round, RuleConfig rule) {
+            var handInfo = HandMaker.GetHandInfo(handTiles, winningTile, openMelds);
+            GetScore(handInfo, handConfig, round, rule);
         }
 
-        public void GetScore(string handTiles, string winningTile, string[] openMelds) {
-            var h = HandMaker.GetHandInfo(handTiles, winningTile, openMelds);
-            GetScore(h);
-        }
-
-        public void GetScore(HandInfo handInfo) {
+        public static void GetScore(HandInfo handInfo, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
             var r = new PointCalculator(handInfo, handConfig, round, rule);
             var s = r.GetPoints();
             if (s.DealerTsumo is not null) {

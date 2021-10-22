@@ -4,10 +4,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using MahjongSharp.Domain;
-using MahjongSharp.Util;
+using MahjongScorer.Domain;
+using MahjongScorer.Util;
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Score {
     public class Decomposer {
         /// <summary>
         /// Divide hand tiles into 4 melds and 1 pair.

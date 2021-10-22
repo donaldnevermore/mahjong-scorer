@@ -3,10 +3,10 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 using System.Linq;
+using MahjongScorer.Domain;
 using NUnit.Framework;
-using MahjongSharp.Domain;
 
-namespace MahjongSharp.Util {
+namespace MahjongScorer.Util {
     [TestFixture]
     public class TileMakerTest {
         [Test]

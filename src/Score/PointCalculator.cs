@@ -3,9 +3,10 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using MahjongSharp.Domain;
+using MahjongScorer.Domain;
+using MahjongScorer.Config;
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Score {
     public class PointCalculator {
         private HandInfo handInfo;
         private HandConfig handConfig;

@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using MahjongSharp.Domain;
-using MahjongSharp.Util;
+using MahjongScorer.Domain;
+using MahjongScorer.Config;
+using MahjongScorer.Util;
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Score {
     public class PointInfo : IComparable<PointInfo> {
         public DealerTsumoPoint? DealerTsumo { get; private set; } = null;
         public NonDealerTsumoPoint? NonDealerTsumo { get; private set; } = null;

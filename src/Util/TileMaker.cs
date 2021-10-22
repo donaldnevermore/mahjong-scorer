@@ -4,9 +4,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using MahjongSharp.Domain;
+using MahjongScorer.Domain;
 
-namespace MahjongSharp.Util {
+namespace MahjongScorer.Util {
     public static class TileMaker {
         /// <summary>
         /// Convert tile string to list of tiles.

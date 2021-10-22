@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace MahjongSharp.Domain {
+namespace MahjongScorer.Domain {
     public record HandInfo {
         public IList<Tile> HandTiles { get; init; }
         public Tile WinningTile { get; init; }

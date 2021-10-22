@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MahjongSharp.Domain {
+namespace MahjongScorer.Domain {
     public class Tile : IComparable<Tile> {
         public static readonly IEqualityComparer<Tile>
             TileIgnoreColorEqualityComparer = new TileIgnoreColorEqualityComparerImpl();

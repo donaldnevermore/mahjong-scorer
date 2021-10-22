@@ -3,9 +3,9 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 using System.Linq;
-using MahjongSharp.Domain;
+using MahjongScorer.Domain;
 
-namespace MahjongSharp.Score {
+namespace MahjongScorer.Score {
     public class DoraCalculator {
         public static DoraInfo GetAllDora(Tile[] handTiles, Tile[] doraTiles, Tile[] uraDoraTiles) {
             var doraCount = CountDora(handTiles, doraTiles);
