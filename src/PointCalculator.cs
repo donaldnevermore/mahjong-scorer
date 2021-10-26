@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using MahjongScorer.Domain;
 using MahjongScorer.Config;
 using MahjongScorer.Point;
@@ -57,18 +56,9 @@ namespace MahjongScorer {
             return pointInfoList[^1];
         }
 
-        private void UpdateStatus() {
-            if (handInfo.OpenMelds.Any(meld => meld.IsOpen)) {
-                handConfig.Menzenchin = false;
-            }
-        }
-
         private DoraInfo GetDoraInfo() {
-            return new() {
-                Dora = handConfig.Dora,
-                UraDora = handConfig.UraDora,
-                RedDora = handInfo.RedDora
-            };
+            return DoraCalculator.GetAllDora(handInfo.AllTiles, handConfig.DoraIndicators,
+                handConfig.UraDoraIndicators);
         }
 
         private PointInfo CountHanAndFu(IList<YakuValue> yakuList, IList<FuValue> fuList) {
@@ -88,9 +78,9 @@ namespace MahjongScorer {
                 }
             }
 
-            var fu = 0;
             var basePoints = 0;
             var dora = GetDoraInfo();
+            var fu = 0;
 
             if (yakumanCount > 0) {
                 // Handle Yakuman.
@@ -99,6 +89,8 @@ namespace MahjongScorer {
             }
             else {
                 han += dora.TotalDora;
+                fu = FuCalculator.CountFu(fuList);
+
                 if (rule.AccumulatedYakuman && han >= 13) {
                     basePoints = Yakuman;
                 }
@@ -115,14 +107,13 @@ namespace MahjongScorer {
                     basePoints = Mangan;
                 }
                 else {
-                    // When han < 5, calculate Fu & base points.
-                    fu = FuCalculator.CountFu(fuList);
-                    var point = fu * (int)Math.Pow(2, han + 2);
-                    if (rule.RoundUpMangan && point >= 1920) {
+                    // When han < 5, calculate base points.
+                    var n = fu * (int)Math.Pow(2, han + 2);
+                    if (rule.RoundUpMangan && n >= 1920) {
                         basePoints = Mangan;
                     }
                     else {
-                        basePoints = Math.Min(Mangan, point);
+                        basePoints = Math.Min(Mangan, n);
                     }
                 }
             }

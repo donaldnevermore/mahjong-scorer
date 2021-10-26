@@ -152,23 +152,24 @@ namespace MahjongScorer {
             var roundWind = round.RoundWindTile;
 
             foreach (var meld in decompose) {
-                if (meld.Type != MeldType.Triplet || meld.Type != MeldType.Quad) {
+                if (meld.Type != MeldType.Triplet && meld.Type != MeldType.Quad) {
                     continue;
                 }
 
-                if (meld.Tiles[0].EqualsIgnoreColor(seatWind)) {
+                var first = meld.Tiles[0];
+                if (first.EqualsIgnoreColor(seatWind)) {
                     result.Add(new YakuValue(YakuType.SeatWind, 1));
                 }
-                if (meld.Tiles[0].EqualsIgnoreColor(roundWind)) {
+                if (first.EqualsIgnoreColor(roundWind)) {
                     result.Add(new YakuValue(YakuType.RoundWind, 1));
                 }
-                if (meld.Tiles[0].EqualsIgnoreColor(new Tile(Suit.Z, 5))) {
+                if (first.EqualsIgnoreColor(new Tile(Suit.Z, 5))) {
                     result.Add(new YakuValue(YakuType.DragonWhite, 1));
                 }
-                if (meld.Tiles[0].EqualsIgnoreColor(new Tile(Suit.Z, 6))) {
+                if (first.EqualsIgnoreColor(new Tile(Suit.Z, 6))) {
                     result.Add(new YakuValue(YakuType.DragonGreen, 1));
                 }
-                if (meld.Tiles[0].EqualsIgnoreColor(new Tile(Suit.Z, 7))) {
+                if (first.EqualsIgnoreColor(new Tile(Suit.Z, 7))) {
                     result.Add(new YakuValue(YakuType.DragonRed, 1));
                 }
             }
@@ -499,6 +500,7 @@ namespace MahjongScorer {
 
                 switch (meld.Type) {
                 case MeldType.Triplet:
+                case MeldType.Quad:
                     tripletFlag |= 1 << (meld.Tiles[0].Rank - 5);
                     break;
                 case MeldType.Pair:
@@ -605,6 +607,7 @@ namespace MahjongScorer {
 
                 switch (meld.Type) {
                 case MeldType.Triplet:
+                case MeldType.Quad:
                     tripletFlag |= 1 << (meld.Tiles[0].Rank - 1);
                     break;
                 case MeldType.Pair:

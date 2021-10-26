@@ -103,9 +103,13 @@ namespace MahjongScorer.Domain {
             var builder = new StringBuilder();
 
             foreach (var tile in Tiles) {
-                builder.Append(tile.Rank.ToString());
+                builder.Append(tile.Rank);
             }
             builder.Append(Suit.ToString().ToLower());
+
+            if (IsOpen) {
+                builder.Append('o');
+            }
 
             return builder.ToString();
         }

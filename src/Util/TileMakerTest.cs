@@ -2,7 +2,6 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
-using System;
 using System.Linq;
 using NUnit.Framework;
 using MahjongScorer.Domain;
@@ -10,12 +9,6 @@ using MahjongScorer.Domain;
 namespace MahjongScorer.Util {
     [TestFixture]
     public class TileMakerTest {
-        [Test]
-        public void TestGetHandInfo() {
-            var h = TileMaker.GetHandInfo("33345m23455p678s", "0p", "");
-            Assert.AreEqual(1, h.RedDora);
-        }
-
         [Test]
         public void TestConvertTiles() {
             var hand = TileMaker.ConvertTiles("234567m23455p67s").ToArray();
@@ -36,13 +29,17 @@ namespace MahjongScorer.Util {
         }
 
         [Test]
-        public void TestConvertMelds() {
-            var m = TileMaker.ConvertOpenMelds("234m");
+        public void TestConvertOpenMelds() {
+            var melds = TileMaker.ConvertOpenMelds("234m,234mo");
+
             var t1 = new Tile(Suit.M, 2);
             var t2 = new Tile(Suit.M, 3);
             var t3 = new Tile(Suit.M, 4);
-            var meld = new Meld(true, t1, t2, t3);
-            Assert.AreEqual(meld, m[0]);
+            var m1 = new Meld(false, t1, t2, t3);
+            var m2 = new Meld(true, t1, t2, t3);
+
+            Assert.AreEqual(m1, melds[0]);
+            Assert.AreEqual(m2, melds[1]);
         }
 
         [Test]

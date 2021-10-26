@@ -3,16 +3,15 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MahjongScorer.Domain {
     public record HandInfo {
-        public IList<Tile> HandTiles { get; }
+        public Tile[] HandTiles { get; }
         public Tile WinningTile { get; }
         public IList<Meld> OpenMelds { get; }
-        public IList<Tile> AllTiles { get; }
+        public Tile[] AllTiles { get; }
 
-        public HandInfo(IList<Tile> handTiles, Tile winningTile, IList<Meld> openMelds) {
+        public HandInfo(Tile[] handTiles, Tile winningTile, IList<Meld> openMelds) {
             HandTiles = handTiles;
             WinningTile = winningTile;
             OpenMelds = openMelds;
@@ -20,9 +19,7 @@ namespace MahjongScorer.Domain {
             AllTiles = InitAllTiles();
         }
 
-        public int RedDora => AllTiles.Count(t => t.IsRed);
-
-        private List<Tile> InitAllTiles() {
+        private Tile[] InitAllTiles() {
             var list = new List<Tile>();
             list.AddRange(HandTiles);
             list.Add(WinningTile);
@@ -32,7 +29,7 @@ namespace MahjongScorer.Domain {
             }
 
             list.Sort();
-            return list;
+            return list.ToArray();
         }
     }
 }

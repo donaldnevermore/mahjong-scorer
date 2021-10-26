@@ -20,11 +20,13 @@ namespace MahjongScorer {
             var decomposes = new HashSet<List<Meld>>(new MeldListEqualityComparer());
 
             // Check if the length of handTile is valid.
-            if (handTiles.Count % 3 != 1) {
+            if (handTiles.Length % 3 != 1) {
                 return decomposes;
             }
 
-            var handAndWinningTiles = new List<Tile>(handTiles) { winningTile };
+            var handAndWinningTiles = new List<Tile>();
+            handAndWinningTiles.AddRange(handTiles);
+            handAndWinningTiles.Add(winningTile);
             var hand = TileMaker.CountTiles(handAndWinningTiles);
 
             AnalyzeHand(hand, decomposes);
@@ -158,8 +160,8 @@ namespace MahjongScorer {
                 hand[index + 1]--;
                 hand[index + 2]--;
 
-                var nextTile = new Tile(tile.Suit, tile.Rank + 1);
-                var next2Tile = new Tile(tile.Suit, tile.Rank + 2);
+                var nextTile = Tile.GetNextTile(tile);
+                var next2Tile = Tile.GetNextTile(nextTile);
                 current.Add(new Meld(false, tile, nextTile, next2Tile));
 
                 DecomposeCore(index, hand, current, result);

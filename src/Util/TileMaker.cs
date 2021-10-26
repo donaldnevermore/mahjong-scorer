@@ -4,12 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MahjongScorer.Domain;
 
 namespace MahjongScorer.Util {
     public static class TileMaker {
         public static HandInfo GetHandInfo(string handTiles, string winningTile, string openMelds) {
-            var h = ConvertTiles(handTiles);
+            var h = ConvertTiles(handTiles).ToArray();
             var w = ConvertTile(winningTile);
             var m = ConvertOpenMelds(openMelds);
             return new HandInfo(h, w, m);
@@ -74,6 +75,7 @@ namespace MahjongScorer.Util {
 
         /// <summary>
         /// Convert string array to open melds.
+        /// String not ending with an 'o' will be treated as closed meld.
         /// Melds are separated by commas.
         /// </summary>
         /// <param name="s"></param>
@@ -89,13 +91,20 @@ namespace MahjongScorer.Util {
             var melds = s.Split(',');
 
             foreach (var m in melds) {
-                var tiles = ConvertTiles(m);
+                var isOpen = false;
+                var meldStr = m;
+                if (m[^1] == 'o') {
+                    meldStr = m[..^1];
+                    isOpen = true;
+                }
+
+                var tiles = ConvertTiles(meldStr);
                 switch (tiles.Count) {
                 case 3:
-                    list.Add(new Meld(true, tiles[0], tiles[1], tiles[2]));
+                    list.Add(new Meld(isOpen, tiles[0], tiles[1], tiles[2]));
                     break;
                 case 4:
-                    list.Add(new Meld(true, tiles[0], tiles[1], tiles[2], tiles[3]));
+                    list.Add(new Meld(isOpen, tiles[0], tiles[1], tiles[2], tiles[3]));
                     break;
                 default:
                     throw new ArgumentException("Meld must have 3 or 4 tiles.");

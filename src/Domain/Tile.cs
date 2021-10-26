@@ -3,7 +3,6 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 
 namespace MahjongScorer.Domain {
     public class Tile : IComparable<Tile> {
@@ -32,6 +31,12 @@ namespace MahjongScorer.Domain {
             var suit = (Suit)(index / 9);
             var rank = index % 9 + 1;
             return new Tile(suit, rank);
+        }
+
+        public static Tile GetNextTile(Tile t) {
+            var n = t.Suit == Suit.Z ? 7 : 9;
+            var r = t.Rank % n + 1;
+            return new Tile(t.Suit, r);
         }
 
         public static int GetIndex(Tile tile) {

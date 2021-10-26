@@ -12,13 +12,13 @@ namespace MahjongScorer {
     [TestFixture]
     public class ScorerTest {
         [Test]
-        public void Test() {
+        public void Test1() {
             var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true, Ippatsu = true };
             var round = new RoundConfig { SeatWind = Wind.North, RiichiBets = 2 };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("23440556m23489s", "7s", "",
-                handConfig, round, rule);
+                "8p,7m", handConfig, round, rule);
             Console.WriteLine(p);
 
             Assert.AreEqual(4, p.Han);
@@ -38,7 +38,7 @@ namespace MahjongScorer {
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("22789m067p34789s", "2s", "",
-                handConfig, round, rule);
+                "3z,5m", handConfig, round, rule);
             Console.WriteLine(p);
 
             Assert.AreEqual(3, p.Han);
@@ -58,7 +58,7 @@ namespace MahjongScorer {
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("2245689m456p789s", "7m", "",
-                handConfig, round, rule);
+                "9s,7p", handConfig, round, rule);
             Console.WriteLine(p);
 
             Assert.AreEqual(1, p.Han);
@@ -78,13 +78,156 @@ namespace MahjongScorer {
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("344056m789p2245s", "3s", "",
-                handConfig, round, rule);
+                "8s,4p", handConfig, round, rule);
             Console.WriteLine(p);
 
             Assert.AreEqual(4, p.Han);
             Assert.AreEqual(20, p.Fu);
             if (p is NonDealerTsumo r) {
                 Assert.AreEqual(5200, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void Test5() {
+            var handConfig = new HandConfig();
+            var round = new RoundConfig { RoundWind = Wind.South };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("789m67p77s", "8p", "666zo,678so",
+                "9m9p", handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(1, p.Han);
+            Assert.AreEqual(30, p.Fu);
+            if (p is Ron r) {
+                Assert.AreEqual(1500, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void Test6() {
+            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true };
+            var round = new RoundConfig { RoundWind = Wind.South, RiichiBets = 1, Honba = 1 };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("34445m222p23467s", "5s", "",
+                "1z,3m", handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(6, p.Han);
+            Assert.AreEqual(30, p.Fu);
+            if (p is DealerTsumo r) {
+                Assert.AreEqual(18000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void Test7() {
+            var handConfig = new HandConfig();
+            var round = new RoundConfig {
+                SeatWind = Wind.West, RoundWind = Wind.South, RiichiBets = 1, Honba = 2
+            };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("678m333567p2s", "2s", "067so",
+                "2m", handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(2, p.Han);
+            Assert.AreEqual(30, p.Fu);
+            if (p is Ron r) {
+                Assert.AreEqual(2000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void Test8() {
+            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi };
+            var round = new RoundConfig {
+                SeatWind = Wind.West, RoundWind = Wind.South, RiichiBets = 2
+            };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("1233344066m123s", "5m", "",
+                "0s9m5p,2m9p2s", handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(9, p.Han);
+            Assert.AreEqual(30, p.Fu);
+            if (p is Ron r) {
+                Assert.AreEqual(16000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestYakuman1() {
+            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi, Under = true, Tsumo = true };
+            var round = new RoundConfig { SeatWind = Wind.West, RiichiBets = 1 };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("789p05577s11177z", "7z", "",
+                "6s,4s", handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(13, p.Han);
+            Assert.AreEqual(50, p.Fu);
+            if (p is NonDealerTsumo r) {
+                Assert.AreEqual(32000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestYakuman2() {
+            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true };
+            var round = new RoundConfig { RoundWind = Wind.South, SeatWind = Wind.South, RiichiBets = 2 };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("33444p33777s", "3s", "9999p",
+                "7p8s,4s2z", handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(1, p.YakumanCount);
+            if (p is NonDealerTsumo r) {
+                Assert.AreEqual(32000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestYakuman3() {
+            var handConfig = new HandConfig();
+            var round = new RoundConfig();
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("0599s", "9s",
+                "5555zo,6666zo,7777zo", "5p4m8m0m",
+                handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(1, p.YakumanCount);
+            if (p is Ron r) {
+                Assert.AreEqual(48000, r.BaseGain);
             }
             else {
                 Assert.Fail();
