@@ -5,38 +5,90 @@
 using System;
 using MahjongScorer.Domain;
 using MahjongScorer.Config;
+using MahjongScorer.Point;
 using NUnit.Framework;
 
 namespace MahjongScorer {
     [TestFixture]
     public class ScorerTest {
         [Test]
-        public void TestDealerRiichi() {
-            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi };
-            var round = new RoundConfig();
+        public void Test() {
+            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true, Ippatsu = true };
+            var round = new RoundConfig { SeatWind = Wind.North, RiichiBets = 2 };
             var rule = new RuleConfig();
 
-            var pt = Scorer.GetScore("33345m23455p678s", "5p",
-                Array.Empty<string>(), handConfig, round, rule);
+            var p = Scorer.GetScore("23440556m23489s", "7s", "",
+                handConfig, round, rule);
+            Console.WriteLine(p);
 
-            Assert.AreEqual(2, pt.Han);
-            Assert.AreEqual(40, pt.Fu);
-            Assert.AreEqual(3900, pt.Ron?.BaseGain);
+            Assert.AreEqual(4, p.Han);
+            Assert.AreEqual(30, p.Fu);
+            if (p is NonDealerTsumo r) {
+                Assert.AreEqual(7900, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
         }
 
         [Test]
-        public void TestNonDealerTsumo() {
-            var dora = new DoraInfo { RedDora = 1 };
-            var hand = new HandConfig { DoraInfo = dora, Tsumo = true, Under = true };
-            var round = new RoundConfig { SeatWind = Wind.North };
+        public void Test2() {
+            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi };
+            var round = new RoundConfig { SeatWind = Wind.West, RiichiBets = 1 };
             var rule = new RuleConfig();
 
-            var pt = Scorer.GetScore("33456789m77p678s", "3m",
-                Array.Empty<string>(), hand, round, rule);
+            var p = Scorer.GetScore("22789m067p34789s", "2s", "",
+                handConfig, round, rule);
+            Console.WriteLine(p);
 
-            Assert.AreEqual(3, pt.Han);
-            Assert.AreEqual(30, pt.Fu);
-            Assert.AreEqual(4000, pt.NonDealerTsumo?.BaseGain);
+            Assert.AreEqual(3, p.Han);
+            Assert.AreEqual(30, p.Fu);
+            if (p is Ron r) {
+                Assert.AreEqual(3900, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void Test3() {
+            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi };
+            var round = new RoundConfig { SeatWind = Wind.North, RiichiBets = 3, Honba = 1 };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("2245689m456p789s", "7m", "",
+                handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(1, p.Han);
+            Assert.AreEqual(40, p.Fu);
+            if (p is Ron r) {
+                Assert.AreEqual(1300, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void Test4() {
+            var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true };
+            var round = new RoundConfig { RoundWind = Wind.South, SeatWind = Wind.North, RiichiBets = 1 };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("344056m789p2245s", "3s", "",
+                handConfig, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(4, p.Han);
+            Assert.AreEqual(20, p.Fu);
+            if (p is NonDealerTsumo r) {
+                Assert.AreEqual(5200, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
         }
     }
 }

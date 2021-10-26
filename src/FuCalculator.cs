@@ -8,7 +8,7 @@ using MahjongScorer.Domain;
 using MahjongScorer.Config;
 using MahjongScorer.Util;
 
-namespace MahjongScorer.Score {
+namespace MahjongScorer {
     public class FuCalculator {
         /// <summary>
         /// Count Fu by taking the hand composition into consideration in terms of tile melds,
@@ -28,20 +28,14 @@ namespace MahjongScorer.Score {
                 return result;
             }
 
-            // 13 Orphans
-            if (decompose.Count == 13) {
-                result.Add(new FuValue(FuType.DoesNotMatter, 0));
-                return result;
-            }
-
             // Pinfu Tsumo
             if (hand.Tsumo && yakuList.Any(yaku => yaku.Name == YakuType.Pinfu)) {
                 result.Add(new FuValue(FuType.PinfuTsumo, 20));
                 return result;
             }
 
-            // Pinfu Ron with an Open Hand
-            if (!hand.Menzenchin && !hand.Tsumo && YakuCalculator.IsPinfuType(decompose, winningTile)) {
+            // Pinfu Ron with an Open Hand (Tsumo is also OK)
+            if (!hand.Menzenchin && YakuCalculator.IsPinfuType(decompose, winningTile)) {
                 result.Add(new FuValue(FuType.PinfuRonWithAnOpenHand, 30));
                 return result;
             }

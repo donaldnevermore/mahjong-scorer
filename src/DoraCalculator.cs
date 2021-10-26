@@ -5,7 +5,7 @@
 using System.Linq;
 using MahjongScorer.Domain;
 
-namespace MahjongScorer.Score {
+namespace MahjongScorer {
     public class DoraCalculator {
         public static DoraInfo GetAllDora(Tile[] handTiles, Tile[] doraTiles, Tile[] uraDoraTiles) {
             var doraCount = CountDora(handTiles, doraTiles);

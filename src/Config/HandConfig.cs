@@ -6,7 +6,8 @@ using MahjongScorer.Domain;
 
 namespace MahjongScorer.Config {
     public class HandConfig {
-        public DoraInfo DoraInfo { get; set; } = new();
+        public int Dora { get; set; } = 0;
+        public int UraDora { get; set; } = 0;
 
         private RiichiStatus riichi = RiichiStatus.None;
 

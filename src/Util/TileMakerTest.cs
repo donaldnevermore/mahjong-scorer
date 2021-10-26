@@ -2,13 +2,20 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
+using System;
 using System.Linq;
-using MahjongScorer.Domain;
 using NUnit.Framework;
+using MahjongScorer.Domain;
 
 namespace MahjongScorer.Util {
     [TestFixture]
     public class TileMakerTest {
+        [Test]
+        public void TestGetHandInfo() {
+            var h = TileMaker.GetHandInfo("33345m23455p678s", "0p", "");
+            Assert.AreEqual(1, h.RedDora);
+        }
+
         [Test]
         public void TestConvertTiles() {
             var hand = TileMaker.ConvertTiles("234567m23455p67s").ToArray();
@@ -30,7 +37,7 @@ namespace MahjongScorer.Util {
 
         [Test]
         public void TestConvertMelds() {
-            var m = TileMaker.ConvertMelds(new[] { "234m" });
+            var m = TileMaker.ConvertOpenMelds("234m");
             var t1 = new Tile(Suit.M, 2);
             var t2 = new Tile(Suit.M, 3);
             var t3 = new Tile(Suit.M, 4);

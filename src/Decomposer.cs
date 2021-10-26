@@ -7,10 +7,10 @@ using System.Linq;
 using MahjongScorer.Domain;
 using MahjongScorer.Util;
 
-namespace MahjongScorer.Score {
+namespace MahjongScorer {
     public class Decomposer {
         /// <summary>
-        /// Divide hand tiles into 4 melds and 1 pair.
+        /// Divide hand tiles into 4 Mentsu and 1 pair.
         /// </summary>
         public static ISet<List<Meld>> Decompose(HandInfo handInfo) {
             var handTiles = handInfo.HandTiles;
@@ -60,8 +60,8 @@ namespace MahjongScorer.Score {
                 suitCount[i / 9] += hand[i];
             }
 
-            var completeMentsuCount = 0;
-            var incompleteSuit = -1;
+            var mentsuSuitCount = 0;
+            var pairSuit = -1;
 
             for (var i = 0; i < suitCount.Length; i++) {
                 // Remainder of each suit must be 0 or 2.
@@ -70,26 +70,27 @@ namespace MahjongScorer.Score {
                 }
 
                 if (suitCount[i] % 3 == 0) {
-                    completeMentsuCount++;
+                    mentsuSuitCount++;
                 }
                 else if (suitCount[i] % 3 == 2) {
-                    incompleteSuit = i;
+                    pairSuit = i;
                 }
             }
 
-            if (completeMentsuCount != 3) {
+            if (mentsuSuitCount != 3) {
                 return;
             }
 
-            FindCompleteForm(incompleteSuit, hand, result);
+            FindMeldPatterns(pairSuit, hand, result);
         }
 
         /// <summary>
         /// Find pairs, triplets, and sequences.
+        /// After calling this method, hand must be set to its original state.
         /// </summary>
-        private static void FindCompleteForm(int incompleteSuit, int[] hand, HashSet<List<Meld>> result) {
-            var suit = (Suit)incompleteSuit;
-            var start = incompleteSuit * 9;
+        private static void FindMeldPatterns(int pairSuit, int[] hand, HashSet<List<Meld>> result) {
+            var suit = (Suit)pairSuit;
+            var start = pairSuit * 9;
             var end = suit == Suit.Z ? start + 7 : start + 9;
 
             for (var index = start; index < end; index++) {
@@ -108,21 +109,30 @@ namespace MahjongScorer.Score {
                         result.Add(meldList);
                     }
 
-                    // Backtrack
+                    // Backtrack and left hand as it is before processing for further analysis.
                     hand[index] += 2;
                 }
             }
         }
 
+        /// <summary>
+        /// Find triplets and sequences.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="hand"></param>
+        /// <param name="current"></param>
+        /// <param name="result"></param>
         private static void DecomposeCore(int index, int[] hand, IList<Meld> current, HashSet<List<Meld>> result) {
             // Outlet
-            if (index == hand.Length) {
-                var newList = new List<Meld>(current);
-                newList.Sort();
-                result.Add(newList);
+            // It reaches the end.
+            if (index >= hand.Length) {
+                var lastMeld = new List<Meld>(current);
+                lastMeld.Sort();
+                result.Add(lastMeld);
                 return;
             }
 
+            // Outlet
             // This tile doesn't exist in hand.
             if (hand[index] == 0) {
                 DecomposeCore(index + 1, hand, current, result);

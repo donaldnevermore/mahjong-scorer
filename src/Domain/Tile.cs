@@ -61,11 +61,6 @@ namespace MahjongScorer.Domain {
             return 0;
         }
 
-        public string ToStringIgnoreColor() {
-            var suffix = GetSuffix();
-            return $"{Rank}{suffix}";
-        }
-
         public string GetSuffix() {
             var suffix = "";
 

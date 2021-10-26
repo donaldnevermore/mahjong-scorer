@@ -19,7 +19,7 @@ namespace MahjongScorer.Domain {
         public int TotalDora => Dora + UraDora + RedDora;
 
         public override string ToString() {
-            return $"Dora = {Dora}, UraDora = {UraDora}, RedDora = {RedDora}";
+            return $"RedDora = {RedDora}, Dora = {Dora}, UraDora = {UraDora}";
         }
     }
 }

@@ -9,7 +9,7 @@ using MahjongScorer.Domain;
 using MahjongScorer.Config;
 using MahjongScorer.Util;
 
-namespace MahjongScorer.Score {
+namespace MahjongScorer {
     public class YakuCalculator {
         private readonly IList<Meld> decompose;
         private readonly Tile winningTile;
@@ -77,7 +77,7 @@ namespace MahjongScorer.Score {
         }
 
         /// <summary>
-        /// Riichi or DoubleRiichi.
+        /// Riichi or Double Riichi.
         /// </summary>
         private void Riichi() {
             if (!hand.Menzenchin || hand.Riichi == RiichiStatus.None) {
@@ -129,13 +129,15 @@ namespace MahjongScorer.Score {
             var doubleSided = false;
 
             foreach (var meld in decompose) {
-                if (meld.Type != MeldType.Pair || meld.Type != MeldType.Sequence) {
-                    return false;
-                }
-
-                if (meld.Type == MeldType.Sequence) {
+                switch (meld.Type) {
+                case MeldType.Pair:
+                    continue;
+                case MeldType.Sequence:
                     sequenceCount++;
                     doubleSided = doubleSided || meld.IsDoubleSidedIgnoreColor(winningTile);
+                    break;
+                default:
+                    return false;
                 }
             }
 

@@ -8,12 +8,21 @@ using MahjongScorer.Domain;
 
 namespace MahjongScorer.Util {
     public static class TileMaker {
+        public static HandInfo GetHandInfo(string handTiles, string winningTile, string openMelds) {
+            var h = ConvertTiles(handTiles);
+            var w = ConvertTile(winningTile);
+            var m = ConvertOpenMelds(openMelds);
+            return new HandInfo(h, w, m);
+        }
+
         /// <summary>
         /// Convert tile string to list of tiles.
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
         public static IList<Tile> ConvertTiles(string s) {
+            if (string.IsNullOrEmpty(s)) {
+                throw new ArgumentException(s);
+            }
+
             var result = new List<Tile>();
             var ranks = new List<int>();
 
@@ -42,6 +51,7 @@ namespace MahjongScorer.Util {
                 }
             }
 
+            result.Sort();
             return result;
         }
 
@@ -54,36 +64,45 @@ namespace MahjongScorer.Util {
             var list = new List<Tile>();
 
             foreach (var r in ranks) {
-                list.Add(new Tile(s, r));
+                var t = r == 0 ? new Tile(s, 5, true) : new Tile(s, r);
+                list.Add(t);
             }
 
+            list.Sort();
             return list;
         }
 
         /// <summary>
         /// Convert string array to open melds.
+        /// Melds are separated by commas.
         /// </summary>
-        /// <param name="melds"></param>
+        /// <param name="s"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IList<Meld> ConvertMelds(string[] melds) {
-            var meldList = new List<Meld>();
+        public static IList<Meld> ConvertOpenMelds(string s) {
+            var list = new List<Meld>();
 
-            foreach (var s in melds) {
-                var tiles = ConvertTiles(s);
+            if (string.IsNullOrEmpty(s)) {
+                return list;
+            }
+
+            var melds = s.Split(',');
+
+            foreach (var m in melds) {
+                var tiles = ConvertTiles(m);
                 switch (tiles.Count) {
                 case 3:
-                    meldList.Add(new Meld(true, tiles[0], tiles[1], tiles[2]));
+                    list.Add(new Meld(true, tiles[0], tiles[1], tiles[2]));
                     break;
                 case 4:
-                    meldList.Add(new Meld(true, tiles[0], tiles[1], tiles[2], tiles[3]));
+                    list.Add(new Meld(true, tiles[0], tiles[1], tiles[2], tiles[3]));
                     break;
                 default:
-                    throw new ArgumentException(nameof(melds));
+                    throw new ArgumentException("Meld must have 3 or 4 tiles.");
                 }
             }
 
-            return meldList;
+            return list;
         }
 
         public static Tile[] GetRedTiles() {

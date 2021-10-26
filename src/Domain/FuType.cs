@@ -4,11 +4,6 @@
 
 namespace MahjongScorer.Domain {
     public enum FuType {
-        /// <summary>
-        /// Fu doesn't matter when Han >= 5.
-        /// </summary>
-        DoesNotMatter,
-
         BaseFu,
         SevenPairs,
         PinfuTsumo,

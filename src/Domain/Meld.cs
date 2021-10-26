@@ -3,7 +3,6 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -70,12 +69,6 @@ namespace MahjongScorer.Domain {
         /// </summary>
         public bool HasYaochuu => Type != MeldType.Single && (Tiles[0].IsYaochuu || Tiles[^1].IsYaochuu);
         public bool IsYaochuu => Type != MeldType.Single && Tiles[0].IsYaochuu && Tiles[^1].IsYaochuu;
-
-        /// <summary>
-        /// Terminal tiles, e.g. 19m19p19s
-        /// </summary>
-        public bool HasTerminal => Type != MeldType.Single && (Tiles[0].IsRoto || Tiles[^1].IsRoto);
-        public bool IsTerminal => Type != MeldType.Single && Tiles[0].IsRoto && Tiles[^1].IsRoto;
 
         /// <summary>
         /// Honor tiles, e.g. 1234567z
@@ -154,7 +147,7 @@ namespace MahjongScorer.Domain {
             if (tile.Rank == 3 && Tiles[0].Rank == 1) {
                 return false;
             }
-            if (tile.Rank == 7 && Tiles[0].Rank == 9) {
+            if (tile.Rank == 7 && Tiles[^1].Rank == 9) {
                 return false;
             }
 
