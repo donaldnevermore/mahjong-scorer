@@ -10,12 +10,12 @@ MahjongScorer is a C# library to help you calculate Han and/or Fu when playing R
 ## Examples
 
 ```csharp
- var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true, Ippatsu = true };
- var round = new RoundConfig { SeatWind = Wind.North, RiichiBets = 2 };
- var rule = new RuleConfig
- var p = Scorer.GetScore("23440556m23489s", "7s", "",
-     "8p,7m", handConfig, round, rule);
- Console.WriteLine(p);
+var hand = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true, Ippatsu = true };
+var round = new RoundConfig { SeatWind = Wind.North, RiichiBets = 2 };
+var rule = new RuleConfig();
+var p = Scorer.GetScore("23440556m23489s", "7s", "",
+    "8p,7m", hand, round, rule);
+Console.WriteLine(p);
 ```
 
 And you should see
