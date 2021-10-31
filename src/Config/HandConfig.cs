@@ -7,16 +7,17 @@ using MahjongScorer.Domain;
 
 namespace MahjongScorer.Config {
     public class HandConfig {
-        public IList<Tile> DoraIndicators { get; set; } = new List<Tile>();
-        public IList<Tile> UraDoraIndicators { get; set; } = new List<Tile>();
+        public List<Tile> DoraIndicators { get; set; } = new();
+        public List<Tile> UraDoraIndicators { get; set; } = new();
 
         private RiichiStatus riichi = RiichiStatus.None;
+        private bool blessing = false;
 
         public RiichiStatus Riichi {
             get => riichi;
             set {
-                Menzenchin = true;
                 riichi = value;
+                Menzenchin = true;
             }
         }
 
@@ -34,7 +35,13 @@ namespace MahjongScorer.Config {
         /// <summary>
         /// Blessing of Heaven or Earth.
         /// </summary>
-        public bool Blessing { get; set; } = false;
+        public bool Blessing {
+            get => blessing;
+            set {
+                blessing = value;
+                Tsumo = true;
+            }
+        }
 
         /// <summary>
         /// Under the Sea or River.

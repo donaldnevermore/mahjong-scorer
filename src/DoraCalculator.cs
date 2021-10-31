@@ -8,7 +8,7 @@ using MahjongScorer.Domain;
 
 namespace MahjongScorer {
     public class DoraCalculator {
-        public static DoraInfo GetAllDora(Tile[] allTiles, IList<Tile> doraIndicators, IList<Tile> uraDoraIndicators) {
+        public static DoraInfo GetAllDora(Tile[] allTiles, List<Tile> doraIndicators, List<Tile> uraDoraIndicators) {
             var doraCount = CountDora(allTiles, doraIndicators);
             var uraDoraCount = CountDora(allTiles, uraDoraIndicators);
             var redDora = CountRedDora(allTiles);
@@ -16,7 +16,7 @@ namespace MahjongScorer {
             return new DoraInfo { RedDora = redDora, Dora = doraCount, UraDora = uraDoraCount };
         }
 
-        public static int CountDora(Tile[] tiles, IList<Tile> indicators) {
+        public static int CountDora(Tile[] tiles, List<Tile> indicators) {
             if (indicators.Count == 0) {
                 return 0;
             }

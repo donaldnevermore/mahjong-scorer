@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MahjongScorer.Domain;
 using MahjongScorer.Config;
 using MahjongScorer.Point;
@@ -36,24 +37,22 @@ namespace MahjongScorer {
                 return new PointInfo();
             }
 
-            var pointInfoList = new List<PointInfo>();
+            var pointList = new List<PointInfo>();
 
             foreach (var decompose in decomposes) {
-                var yakuList = GetYakuList(decompose);
-                var fuList = GetFuList(decompose, yakuList);
-                if (yakuList.Count != 0) {
-                    var info = CountHanAndFu(yakuList, fuList);
-                    pointInfoList.Add(info);
+                var pointInfo = CountHanAndFu(decompose);
+                if (pointInfo.IsValid) {
+                    pointList.Add(pointInfo);
                 }
             }
 
-            if (pointInfoList.Count == 0) {
+            if (pointList.Count == 0) {
                 return new PointInfo();
             }
 
             // Sort and get the highest point.
-            pointInfoList.Sort();
-            return pointInfoList[^1];
+            pointList.Sort();
+            return pointList[^1];
         }
 
         private DoraInfo GetDoraInfo() {
@@ -61,12 +60,14 @@ namespace MahjongScorer {
                 handConfig.UraDoraIndicators);
         }
 
-        private PointInfo CountHanAndFu(IList<YakuValue> yakuList, IList<FuValue> fuList) {
+        private PointInfo CountHanAndFu(List<Meld> decompose) {
+            var yakuList = GetYakuList(decompose);
+
             if (yakuList.Count == 0) {
                 return new PointInfo();
             }
 
-            var han = 0;
+            var hanWithoutYakumanAndDora = 0;
             var yakumanCount = 0;
 
             foreach (var yaku in yakuList) {
@@ -74,21 +75,28 @@ namespace MahjongScorer {
                     yakumanCount += yaku.Value;
                 }
                 else {
-                    han += yaku.Value;
+                    hanWithoutYakumanAndDora += yaku.Value;
                 }
             }
 
-            var basePoints = 0;
+            int basePoints;
+            int han;
+            List<FuValue> fuList;
+            int fu;
             var dora = GetDoraInfo();
-            var fu = 0;
 
             if (yakumanCount > 0) {
                 // Handle Yakuman.
                 yakumanCount = rule.MultipleYakuman ? yakumanCount : 1;
                 basePoints = Yakuman * yakumanCount;
+                yakuList = yakuList.Where(yakuValue => yakuValue.IsYakuman).ToList();
+                han = 0;
+                fuList = new List<FuValue>();
+                fu = 0;
             }
             else {
-                han += dora.TotalDora;
+                han = hanWithoutYakumanAndDora + dora.TotalDora;
+                fuList = GetFuList(decompose);
                 fu = FuCalculator.CountFu(fuList);
 
                 if (rule.AccumulatedYakuman && han >= 13) {
@@ -158,14 +166,14 @@ namespace MahjongScorer {
             };
         }
 
-        private IList<FuValue> GetFuList(IList<Meld> decompose, IList<YakuValue> yakuList) {
-            return FuCalculator.GetFuList(decompose, handInfo.WinningTile, yakuList, handConfig, round, rule);
+        private List<FuValue> GetFuList(List<Meld> decompose) {
+            return FuCalculator.GetFuList(decompose, handInfo.WinningTile, handConfig, round, rule);
         }
 
         /// <summary>
         /// Count Han, the main portion of scoring, as each yaku is assigned a value in terms of han.
         /// </summary>
-        private IList<YakuValue> GetYakuList(IList<Meld> decompose) {
+        private List<YakuValue> GetYakuList(List<Meld> decompose) {
             var yc = new YakuCalculator(decompose, handInfo.WinningTile, handConfig, round, rule);
             return yc.GetYakuList();
         }
@@ -174,7 +182,7 @@ namespace MahjongScorer {
             return Decomposer.Decompose(handInfo).Count > 0;
         }
 
-        public static IList<Tile> GetWinningTiles(HandInfo hand) {
+        public static List<Tile> GetWinningTiles(HandInfo hand) {
             var list = new List<Tile>();
             for (var index = 0; index < 34; index++) {
                 var tile = Tile.GetTile(index);

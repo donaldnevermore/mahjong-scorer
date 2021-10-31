@@ -18,12 +18,17 @@ namespace MahjongScorer.Point {
         public int Honba { get; init; } = 0;
         public int RiichiBets { get; init; } = 0;
 
+        public List<YakuValue> YakuList { get; init; } = new();
+        public List<FuValue> FuList { get; init; } = new();
+
         public int ExtraGain => RiichiBets * 1000 + Honba * 300;
         public int HonbaPay => Honba * 300;
         public int HonbaPayOnAll => Honba * 100;
 
-        public IList<YakuValue> YakuList { get; init; } = new List<YakuValue>();
-        public IList<FuValue> FuList { get; init; } = new List<FuValue>();
+        /// <summary>
+        /// It must have at least 1 Han.
+        /// </summary>
+        public bool IsValid => YakuList.Count != 0;
 
         public override string ToString() {
             var yakuDetail = YakuList.Count == 0
@@ -41,7 +46,7 @@ namespace MahjongScorer.Point {
 
         public int CompareTo(PointInfo? other) {
             if (other is null) {
-                throw new ArgumentException(nameof(other));
+                throw new ArgumentNullException(nameof(other));
             }
 
             var basePointsCompare = BasePoints.CompareTo(other.BasePoints);

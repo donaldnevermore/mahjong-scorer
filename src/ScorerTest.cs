@@ -233,5 +233,36 @@ namespace MahjongScorer {
                 Assert.Fail();
             }
         }
+
+        [Test]
+        public void TestYakuman4() {
+            var hand = new HandConfig { Blessing = true };
+            var round = new RoundConfig();
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("1112223334445z", "5z",
+                "", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(6, p.YakumanCount);
+            if (p is DealerTsumo r) {
+                Assert.AreEqual(288000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestGetActualPoint() {
+            var got = Scorer.GetActualPoint(new[] { 47300, 24100, 20300, 8300 },
+                new[] { 20, 10, -10, -20 }, 30000);
+            var want = new[] { 57.3, 4.1, -19.7, -41.7 };
+
+            for (var i = 0; i < 4; i++) {
+                Assert.AreEqual(want[i], got[i], 0.000001);
+            }
+        }
     }
 }

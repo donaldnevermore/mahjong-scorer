@@ -11,41 +11,35 @@ using MahjongScorer.Util;
 
 namespace MahjongScorer {
     public class YakuCalculator {
-        private readonly IList<Meld> decompose;
+        private readonly List<Meld> decompose;
         private readonly Tile winningTile;
         private readonly HandConfig hand;
         private readonly RoundConfig round;
         private readonly RuleConfig rule;
-        private readonly List<YakuValue> result;
+        private readonly List<YakuValue> result = new();
 
-        public YakuCalculator(IList<Meld> decompose, Tile winningTile, HandConfig hand, RoundConfig round,
+        public YakuCalculator(List<Meld> decompose, Tile winningTile, HandConfig hand, RoundConfig round,
             RuleConfig rule) {
             this.decompose = decompose;
             this.winningTile = winningTile;
             this.hand = hand;
             this.round = round;
             this.rule = rule;
-            result = new List<YakuValue>();
         }
 
-        public IList<YakuValue> GetYakuList() {
+        public List<YakuValue> GetYakuList() {
             if (decompose.Count == 0) {
+                result.Clear();
                 return result;
             }
+
             if (result.Count != 0) {
                 return result;
             }
 
             CountYaku();
 
-            var hasYakuman = result.Any(yakuValue => yakuValue.IsYakuman);
-            return hasYakuman
-                ? result.Where(yakuValue => yakuValue.IsYakuman).ToList()
-                : result;
-        }
-
-        public void Reset() {
-            result.Clear();
+            return result;
         }
 
         private void CountYaku() {
@@ -93,7 +87,7 @@ namespace MahjongScorer {
         }
 
         /// <summary>
-        /// One Shot.
+        /// After Riichi, you Tsumo or Ron before next time you draw a tile without anyone making a call.
         /// </summary>
         private void Ippatsu() {
             var menzenchinRiichi = hand.Menzenchin && hand.Riichi != RiichiStatus.None;
@@ -119,12 +113,12 @@ namespace MahjongScorer {
                 return;
             }
 
-            if (IsPinfuType(decompose, winningTile)) {
+            if (IsPinfuShape(decompose, winningTile)) {
                 result.Add(new YakuValue(YakuType.Pinfu, 1));
             }
         }
 
-        public static bool IsPinfuType(IList<Meld> decompose, Tile winningTile) {
+        public static bool IsPinfuShape(List<Meld> decompose, Tile winningTile) {
             var sequenceCount = 0;
             var doubleSided = false;
 

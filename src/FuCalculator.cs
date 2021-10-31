@@ -14,13 +14,9 @@ namespace MahjongScorer {
         /// Count Fu by taking the hand composition into consideration in terms of tile melds,
         /// wait patterns and/or win method.
         /// </summary>
-        public static IList<FuValue> GetFuList(IList<Meld> decompose, Tile winningTile, IList<YakuValue> yakuList,
+        public static List<FuValue> GetFuList(List<Meld> decompose, Tile winningTile,
             HandConfig hand, RoundConfig round, RuleConfig rule) {
             var result = new List<FuValue>();
-
-            if (yakuList.Count == 0) {
-                return result;
-            }
 
             // 7 Pairs
             if (decompose.Count == 7) {
@@ -28,14 +24,16 @@ namespace MahjongScorer {
                 return result;
             }
 
+            var isPinfuShape = YakuCalculator.IsPinfuShape(decompose, winningTile);
+
             // Pinfu Tsumo
-            if (hand.Tsumo && yakuList.Any(yaku => yaku.Name == YakuType.Pinfu)) {
+            if (isPinfuShape && hand.Menzenchin && hand.Tsumo) {
                 result.Add(new FuValue(FuType.PinfuTsumo, 20));
                 return result;
             }
 
             // Pinfu Ron with an Open Hand (Tsumo is also OK)
-            if (!hand.Menzenchin && YakuCalculator.IsPinfuType(decompose, winningTile)) {
+            if (isPinfuShape && !hand.Menzenchin) {
                 result.Add(new FuValue(FuType.PinfuRonWithAnOpenHand, 30));
                 return result;
             }
@@ -49,7 +47,7 @@ namespace MahjongScorer {
             return result;
         }
 
-        public static int CountFu(IList<FuValue> fuList) {
+        public static int CountFu(List<FuValue> fuList) {
             if (fuList.Count == 1) {
                 return fuList[0].Value;
             }
@@ -58,8 +56,8 @@ namespace MahjongScorer {
             return NumberUtil.RoundUpToNextUnit(sum, 10);
         }
 
-        private static void CountMeldPattern(IList<Meld> decompose, Tile winningTile,
-            HandConfig hand, RoundConfig round, RuleConfig rule, IList<FuValue> result) {
+        private static void CountMeldPattern(List<Meld> decompose, Tile winningTile,
+            HandConfig hand, RoundConfig round, RuleConfig rule, List<FuValue> result) {
             foreach (var meld in decompose) {
                 var isOpen = meld.IsOpen || (!hand.Tsumo && meld.ContainsIgnoreColor(winningTile));
 
@@ -77,7 +75,7 @@ namespace MahjongScorer {
             }
         }
 
-        private static void CountPair(Meld pair, RoundConfig round, RuleConfig rule, IList<FuValue> result) {
+        private static void CountPair(Meld pair, RoundConfig round, RuleConfig rule, List<FuValue> result) {
             if (!pair.IsHonor) {
                 return;
             }
@@ -99,46 +97,34 @@ namespace MahjongScorer {
             }
         }
 
-        private static void CountTriplet(Meld meld, bool isOpen, IList<FuValue> result) {
+        private static void CountTriplet(Meld meld, bool isOpen, List<FuValue> result) {
             if (isOpen) {
-                if (meld.IsYaochuu) {
-                    result.Add(new FuValue(FuType.OpenTripletYaochuu, 4));
-                }
-                else {
-                    result.Add(new FuValue(FuType.OpenTriplet, 2));
-                }
+                result.Add(meld.IsYaochuu
+                    ? new FuValue(FuType.OpenTripletYaochuu, 4)
+                    : new FuValue(FuType.OpenTriplet, 2));
             }
             else {
-                if (meld.IsYaochuu) {
-                    result.Add(new FuValue(FuType.ClosedTripletYaochuu, 8));
-                }
-                else {
-                    result.Add(new FuValue(FuType.ClosedTriplet, 4));
-                }
+                result.Add(meld.IsYaochuu
+                    ? new FuValue(FuType.ClosedTripletYaochuu, 8)
+                    : new FuValue(FuType.ClosedTriplet, 4));
             }
         }
 
-        private static void CountQuad(Meld meld, bool isOpen, IList<FuValue> result) {
+        private static void CountQuad(Meld meld, bool isOpen, List<FuValue> result) {
             if (isOpen) {
-                if (meld.IsYaochuu) {
-                    result.Add(new FuValue(FuType.OpenQuadYaochuu, 16));
-                }
-                else {
-                    result.Add(new FuValue(FuType.OpenQuad, 8));
-                }
+                result.Add(meld.IsYaochuu
+                    ? new FuValue(FuType.OpenQuadYaochuu, 16)
+                    : new FuValue(FuType.OpenQuad, 8));
             }
             else {
-                if (meld.IsYaochuu) {
-                    result.Add(new FuValue(FuType.ClosedQuadYaochuu, 32));
-                }
-                else {
-                    result.Add(new FuValue(FuType.ClosedQuad, 16));
-                }
+                result.Add(meld.IsYaochuu
+                    ? new FuValue(FuType.ClosedQuadYaochuu, 32)
+                    : new FuValue(FuType.ClosedQuad, 16));
             }
         }
 
-        private static void CountWaitingPattern(IList<Meld> decompose, Tile winningTile,
-            HandConfig hand, IList<FuValue> result) {
+        private static void CountWaitingPattern(List<Meld> decompose, Tile winningTile,
+            HandConfig hand, List<FuValue> result) {
             // Tsumo
             if (hand.Tsumo) {
                 result.Add(new FuValue(FuType.Tsumo, 2));

@@ -12,7 +12,7 @@ namespace MahjongScorer {
         /// <summary>
         /// Divide hand tiles into 4 Mentsu and 1 pair.
         /// </summary>
-        public static ISet<List<Meld>> Decompose(HandInfo handInfo) {
+        public static HashSet<List<Meld>> Decompose(HandInfo handInfo) {
             var handTiles = handInfo.HandTiles;
             var winningTile = handInfo.WinningTile;
             var openMelds = handInfo.OpenMelds;
@@ -124,7 +124,7 @@ namespace MahjongScorer {
         /// <param name="hand"></param>
         /// <param name="current"></param>
         /// <param name="result"></param>
-        private static void DecomposeCore(int index, int[] hand, IList<Meld> current, HashSet<List<Meld>> result) {
+        private static void DecomposeCore(int index, int[] hand, List<Meld> current, HashSet<List<Meld>> result) {
             // Outlet
             // It reaches the end.
             if (index >= hand.Length) {
@@ -245,8 +245,8 @@ namespace MahjongScorer {
             result.Add(meldList);
         }
 
-        private struct MeldListEqualityComparer : IEqualityComparer<IList<Meld>> {
-            public bool Equals(IList<Meld>? x, IList<Meld>? y) {
+        private struct MeldListEqualityComparer : IEqualityComparer<List<Meld>> {
+            public bool Equals(List<Meld>? x, List<Meld>? y) {
                 if (x is null && y is null) {
                     return true;
                 }
@@ -267,7 +267,7 @@ namespace MahjongScorer {
                 return true;
             }
 
-            public int GetHashCode(IList<Meld> obj) {
+            public int GetHashCode(List<Meld> obj) {
                 var hash = 0;
                 foreach (var meld in obj) {
                     hash = hash * 31 + meld.GetHashCode();

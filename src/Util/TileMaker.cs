@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using MahjongScorer.Domain;
 
 namespace MahjongScorer.Util {
@@ -19,7 +18,7 @@ namespace MahjongScorer.Util {
         /// <summary>
         /// Convert tile string to list of tiles.
         /// </summary>
-        public static IList<Tile> ConvertTiles(string s) {
+        public static List<Tile> ConvertTiles(string s) {
             if (string.IsNullOrEmpty(s)) {
                 throw new ArgumentException(s);
             }
@@ -61,7 +60,7 @@ namespace MahjongScorer.Util {
             return tiles[0];
         }
 
-        private static IList<Tile> ConvertSuit(Suit s, IList<int> ranks) {
+        private static List<Tile> ConvertSuit(Suit s, List<int> ranks) {
             var list = new List<Tile>();
 
             foreach (var r in ranks) {
@@ -81,7 +80,7 @@ namespace MahjongScorer.Util {
         /// <param name="s"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IList<Meld> ConvertOpenMelds(string s) {
+        public static List<Meld> ConvertOpenMelds(string s) {
             var list = new List<Meld>();
 
             if (string.IsNullOrEmpty(s)) {
@@ -122,7 +121,7 @@ namespace MahjongScorer.Util {
             };
         }
 
-        public static int[] CountMeldTiles(IList<Meld> melds) {
+        public static int[] CountMeldTiles(List<Meld> melds) {
             var array = new int[34];
             foreach (var meld in melds) {
                 foreach (var tile in meld.Tiles) {
@@ -138,7 +137,7 @@ namespace MahjongScorer.Util {
         /// </summary>
         /// <param name="tiles"></param>
         /// <returns></returns>
-        public static int[] CountTiles(IList<Tile> tiles) {
+        public static int[] CountTiles(List<Tile> tiles) {
             var arr = new int[34];
             foreach (var tile in tiles) {
                 arr[Tile.GetIndex(tile)]++;

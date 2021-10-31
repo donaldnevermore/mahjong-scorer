@@ -52,5 +52,17 @@ namespace MahjongScorer {
             var pt = GetHandScore(handInfo, handConfig, round, rule);
             Console.WriteLine(pt);
         }
+
+        public static double[] GetActualPoint(int[] scores, int[] points, int returnPoint) {
+            var result = new double[4];
+
+            result[1] = (scores[1] - returnPoint) / 1000.0 + points[1];
+            result[2] = (scores[2] - returnPoint) / 1000.0 + points[2];
+            result[3] = (scores[3] - returnPoint) / 1000.0 + points[3];
+
+            result[0] = -(result[1] + result[2] + result[3]);
+
+            return result;
+        }
     }
 }
