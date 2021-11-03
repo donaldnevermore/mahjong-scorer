@@ -24,7 +24,7 @@ namespace MahjongScorer {
                 return result;
             }
 
-            var isPinfuShape = YakuCalculator.IsPinfuShape(decompose, winningTile);
+            var isPinfuShape = YakuCalculator.IsPinfuShape(decompose, winningTile, round);
 
             // Pinfu Tsumo
             if (isPinfuShape && hand.Menzenchin && hand.Tsumo) {
@@ -80,19 +80,22 @@ namespace MahjongScorer {
                 return;
             }
 
-            // Dragon tiles
-            if (pair.Tiles[0].Rank >= 5 && pair.Tiles[0].Rank <= 7) {
+            var rank = pair.Tiles[0].Rank;
+            var seatWind = (int)round.SeatWind;
+            var roundWind = (int)round.RoundWind;
+
+            if (rank >= 5 && rank <= 7) {
+                // Dragon tiles
                 result.Add(new FuValue(FuType.Dragon, 2));
             }
-            // Double Wind
-            else if (pair.Tiles[0].EqualsIgnoreColor(round.SeatWindTile) &&
-                pair.Tiles[0].EqualsIgnoreColor(round.RoundWindTile)) {
+            else if (rank == seatWind && rank == roundWind) {
+                // Double Wind
                 result.Add(new FuValue(FuType.DoubleWind, rule.DoubleWindFu ? 4 : 2));
             }
-            else if (pair.Tiles[0].EqualsIgnoreColor(round.SeatWindTile)) {
+            else if (rank == seatWind) {
                 result.Add(new FuValue(FuType.SeatWind, 2));
             }
-            else if (pair.Tiles[0].EqualsIgnoreColor(round.RoundWindTile)) {
+            else if (rank == roundWind) {
                 result.Add(new FuValue(FuType.RoundWind, 2));
             }
         }

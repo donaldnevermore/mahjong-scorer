@@ -3,10 +3,16 @@
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
 namespace MahjongScorer.Domain {
-    public enum Wind {
+    /// <summary>
+    /// Wind & Dragon tiles.
+    /// </summary>
+    public enum Honor {
         East = 1,
         South,
         West,
-        North
+        North,
+        White,
+        Green,
+        Red
     }
 }

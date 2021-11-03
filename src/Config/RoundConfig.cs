@@ -6,13 +6,10 @@ using MahjongScorer.Domain;
 
 namespace MahjongScorer.Config {
     public class RoundConfig {
-        public Wind RoundWind { get; set; } = Wind.East;
-        public Wind SeatWind { get; set; } = Wind.East;
+        public Honor RoundWind { get; set; } = Honor.East;
+        public Honor SeatWind { get; set; } = Honor.East;
         public int Honba { get; set; } = 0;
         public int RiichiBets { get; set; } = 0;
-
-        public Tile RoundWindTile => new(Suit.Z, (int)RoundWind);
-        public Tile SeatWindTile => new(Suit.Z, (int)SeatWind);
-        public bool IsDealer => SeatWind == Wind.East;
+        public bool IsDealer => SeatWind == Honor.East;
     }
 }

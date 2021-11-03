@@ -113,19 +113,24 @@ namespace MahjongScorer {
                 return;
             }
 
-            if (IsPinfuShape(decompose, winningTile)) {
+            if (IsPinfuShape(decompose, winningTile, round)) {
                 result.Add(new YakuValue(YakuType.Pinfu, 1));
             }
         }
 
-        public static bool IsPinfuShape(List<Meld> decompose, Tile winningTile) {
+        public static bool IsPinfuShape(List<Meld> decompose, Tile winningTile, RoundConfig round) {
             var sequenceCount = 0;
             var doubleSided = false;
 
             foreach (var meld in decompose) {
                 switch (meld.Type) {
                 case MeldType.Pair:
-                    continue;
+                    if (IsYakuhai(meld, round)) {
+                        return false;
+                    }
+                    else {
+                        continue;
+                    }
                 case MeldType.Sequence:
                     sequenceCount++;
                     doubleSided = doubleSided || meld.IsDoubleSidedIgnoreColor(winningTile);
@@ -142,31 +147,49 @@ namespace MahjongScorer {
         /// Seat Wind, Round Wind, and Dragon tiles.
         /// </summary>
         private void Yakuhai() {
-            var seatWind = round.SeatWindTile;
-            var roundWind = round.RoundWindTile;
-
             foreach (var meld in decompose) {
-                if (meld.Type != MeldType.Triplet && meld.Type != MeldType.Quad) {
+                if (!meld.IsHonor || (meld.Type != MeldType.Triplet && meld.Type != MeldType.Quad)) {
                     continue;
                 }
 
-                var first = meld.Tiles[0];
-                if (first.EqualsIgnoreColor(seatWind)) {
-                    result.Add(new YakuValue(YakuType.SeatWind, 1));
-                }
-                if (first.EqualsIgnoreColor(roundWind)) {
-                    result.Add(new YakuValue(YakuType.RoundWind, 1));
-                }
-                if (first.EqualsIgnoreColor(new Tile(Suit.Z, 5))) {
+                var rank = meld.Tiles[0].Rank;
+
+                if (rank == 5) {
                     result.Add(new YakuValue(YakuType.DragonWhite, 1));
                 }
-                if (first.EqualsIgnoreColor(new Tile(Suit.Z, 6))) {
+                if (rank == 6) {
                     result.Add(new YakuValue(YakuType.DragonGreen, 1));
                 }
-                if (first.EqualsIgnoreColor(new Tile(Suit.Z, 7))) {
+                if (rank == 7) {
                     result.Add(new YakuValue(YakuType.DragonRed, 1));
                 }
+                if (rank == (int)round.SeatWind) {
+                    result.Add(new YakuValue(YakuType.SeatWind, 1));
+                }
+                if (rank == (int)round.RoundWind) {
+                    result.Add(new YakuValue(YakuType.RoundWind, 1));
+                }
             }
+        }
+
+        public static bool IsYakuhai(Meld meld, RoundConfig round) {
+            if (!meld.IsHonor) {
+                return false;
+            }
+
+            var rank = meld.Tiles[0].Rank;
+
+            if (rank >= 5 && rank <= 7) {
+                return true;
+            }
+            if (rank == (int)round.SeatWind) {
+                return true;
+            }
+            if (rank == (int)round.RoundWind) {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

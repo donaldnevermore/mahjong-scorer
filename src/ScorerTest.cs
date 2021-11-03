@@ -14,7 +14,7 @@ namespace MahjongScorer {
         [Test]
         public void Test1() {
             var hand = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true, Ippatsu = true };
-            var round = new RoundConfig { SeatWind = Wind.North, RiichiBets = 2 };
+            var round = new RoundConfig { SeatWind = Honor.North, RiichiBets = 2 };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("23440556m23489s", "7s", "",
@@ -34,7 +34,7 @@ namespace MahjongScorer {
         [Test]
         public void Test2() {
             var hand = new HandConfig { Riichi = RiichiStatus.Riichi };
-            var round = new RoundConfig { SeatWind = Wind.West, RiichiBets = 1 };
+            var round = new RoundConfig { SeatWind = Honor.West, RiichiBets = 1 };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("22789m067p34789s", "2s", "",
@@ -54,7 +54,7 @@ namespace MahjongScorer {
         [Test]
         public void Test3() {
             var hand = new HandConfig { Riichi = RiichiStatus.Riichi };
-            var round = new RoundConfig { SeatWind = Wind.North, RiichiBets = 3, Honba = 1 };
+            var round = new RoundConfig { SeatWind = Honor.North, RiichiBets = 3, Honba = 1 };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("2245689m456p789s", "7m", "",
@@ -74,7 +74,7 @@ namespace MahjongScorer {
         [Test]
         public void Test4() {
             var hand = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true };
-            var round = new RoundConfig { RoundWind = Wind.South, SeatWind = Wind.North, RiichiBets = 1 };
+            var round = new RoundConfig { RoundWind = Honor.South, SeatWind = Honor.North, RiichiBets = 1 };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("344056m789p2245s", "3s", "",
@@ -94,7 +94,7 @@ namespace MahjongScorer {
         [Test]
         public void Test5() {
             var hand = new HandConfig();
-            var round = new RoundConfig { RoundWind = Wind.South };
+            var round = new RoundConfig { RoundWind = Honor.South };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("789m67p77s", "8p", "666zo,678so",
@@ -114,7 +114,7 @@ namespace MahjongScorer {
         [Test]
         public void Test6() {
             var hand = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true };
-            var round = new RoundConfig { RoundWind = Wind.South, RiichiBets = 1, Honba = 1 };
+            var round = new RoundConfig { RoundWind = Honor.South, RiichiBets = 1, Honba = 1 };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("34445m222p23467s", "5s", "",
@@ -135,7 +135,10 @@ namespace MahjongScorer {
         public void Test7() {
             var hand = new HandConfig();
             var round = new RoundConfig {
-                SeatWind = Wind.West, RoundWind = Wind.South, RiichiBets = 1, Honba = 2
+                SeatWind = Honor.West,
+                RoundWind = Honor.South,
+                RiichiBets = 1,
+                Honba = 2
             };
             var rule = new RuleConfig();
 
@@ -157,7 +160,9 @@ namespace MahjongScorer {
         public void Test8() {
             var hand = new HandConfig { Riichi = RiichiStatus.Riichi };
             var round = new RoundConfig {
-                SeatWind = Wind.West, RoundWind = Wind.South, RiichiBets = 2
+                SeatWind = Honor.West,
+                RoundWind = Honor.South,
+                RiichiBets = 2
             };
             var rule = new RuleConfig();
 
@@ -178,7 +183,7 @@ namespace MahjongScorer {
         [Test]
         public void TestYakuman1() {
             var hand = new HandConfig { Riichi = RiichiStatus.Riichi, Under = true, Tsumo = true };
-            var round = new RoundConfig { SeatWind = Wind.West, RiichiBets = 1 };
+            var round = new RoundConfig { SeatWind = Honor.West, RiichiBets = 1 };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("789p05577s11177z", "7z", "",
@@ -198,7 +203,7 @@ namespace MahjongScorer {
         [Test]
         public void TestYakuman2() {
             var hand = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true };
-            var round = new RoundConfig { RoundWind = Wind.South, SeatWind = Wind.South, RiichiBets = 2 };
+            var round = new RoundConfig { RoundWind = Honor.South, SeatWind = Honor.South, RiichiBets = 2 };
             var rule = new RuleConfig();
 
             var p = Scorer.GetScore("33444p33777s", "3s", "9999p",
