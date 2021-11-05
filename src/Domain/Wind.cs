@@ -4,15 +4,12 @@
 
 namespace MahjongScorer.Domain {
     /// <summary>
-    /// Wind & Dragon tiles.
+    /// Wind tiles.
     /// </summary>
-    public enum Honor {
+    public enum Wind {
         East = 1,
         South,
         West,
-        North,
-        White,
-        Green,
-        Red
+        North
     }
 }

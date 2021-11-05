@@ -44,15 +44,9 @@ namespace MahjongScorer.Util {
 
         [Test]
         public void TestGetGreenTiles() {
-            var got = TileMaker.GetGreenTiles();
+            var got = TileMaker.GreenTiles;
             var want = new[] { 19, 20, 21, 23, 25, 32 };
             Assert.AreEqual(want, got);
-        }
-
-        [Test]
-        public void TestGetFullTiles() {
-            var got = TileMaker.GetFullTiles();
-            Assert.AreEqual(136, got.Length);
         }
     }
 }

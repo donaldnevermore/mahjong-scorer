@@ -43,7 +43,7 @@ namespace MahjongScorer {
         }
 
         private void CountYaku() {
-            Riichi();
+            RiichiAndIppatsu();
             Tanyao();
             MenzenchinTsumo();
             Yakuhai();
@@ -52,8 +52,8 @@ namespace MahjongScorer {
             RobbingAKan();
             AfterAKan();
             Under();
-            Ippatsu();
-            Triple();
+            TripleTriplets();
+            MixedTripleSequence();
             Quads();
             AllTriplets();
             SevenPairs();
@@ -73,16 +73,22 @@ namespace MahjongScorer {
         /// <summary>
         /// Riichi or Double Riichi.
         /// </summary>
-        private void Riichi() {
-            if (!hand.Menzenchin || hand.Riichi == RiichiStatus.None) {
+        private void RiichiAndIppatsu() {
+            if (!hand.Menzenchin) {
                 return;
             }
 
-            if (hand.Riichi == RiichiStatus.Riichi) {
+            switch (hand.Riichi) {
+            case RiichiStatus.Riichi:
                 result.Add(new YakuValue(YakuType.Riichi, 1));
-            }
-            else if (hand.Riichi == RiichiStatus.DoubleRiichi) {
+                Ippatsu();
+                break;
+            case RiichiStatus.DoubleRiichi:
                 result.Add(new YakuValue(YakuType.DoubleRiichi, 2));
+                Ippatsu();
+                break;
+            default:
+                break;
             }
         }
 
@@ -90,8 +96,7 @@ namespace MahjongScorer {
         /// After Riichi, you Tsumo or Ron before next time you draw a tile without anyone making a call.
         /// </summary>
         private void Ippatsu() {
-            var menzenchinRiichi = hand.Menzenchin && hand.Riichi != RiichiStatus.None;
-            if (menzenchinRiichi && hand.Ippatsu) {
+            if (hand.Ippatsu) {
                 result.Add(new YakuValue(YakuType.Ippatsu, 1));
             }
         }
@@ -106,7 +111,7 @@ namespace MahjongScorer {
         }
 
         /// <summary>
-        /// 4 Sequences + 1 non-Yakuhai pair, and the winning tile must be double-sided.
+        /// 4 sequences + 1 non-Yakuhai pair, and the winning tile must be double-sided.
         /// </summary>
         private void Pinfu() {
             if (!hand.Menzenchin) {
@@ -128,12 +133,12 @@ namespace MahjongScorer {
                     if (IsYakuhai(meld, round)) {
                         return false;
                     }
-                    else {
-                        continue;
-                    }
+                    break;
                 case MeldType.Sequence:
                     sequenceCount++;
-                    doubleSided = doubleSided || meld.IsDoubleSidedIgnoreColor(winningTile);
+                    if (meld.IsDoubleSidedIgnoreColor(winningTile)) {
+                        doubleSided = true;
+                    }
                     break;
                 default:
                     return false;
@@ -193,7 +198,7 @@ namespace MahjongScorer {
         }
 
         /// <summary>
-        /// All simples.
+        /// All simples, excluding Yaochuu tiles.
         /// </summary>
         private void Tanyao() {
             foreach (var meld in decompose) {
@@ -240,7 +245,7 @@ namespace MahjongScorer {
         }
 
         /// <summary>
-        /// 7 pairs.
+        /// 7 different pairs.
         /// </summary>
         private void SevenPairs() {
             if (!hand.Menzenchin) {
@@ -249,11 +254,8 @@ namespace MahjongScorer {
             if (decompose.Count != 7) {
                 return;
             }
-
-            foreach (var meld in decompose) {
-                if (meld.Type != MeldType.Pair) {
-                    return;
-                }
+            if (decompose.Any(meld => meld.Type != MeldType.Pair)) {
+                return;
             }
 
             result.Add(new YakuValue(YakuType.SevenPairs, 2));
@@ -284,25 +286,19 @@ namespace MahjongScorer {
         }
 
         /// <summary>
-        /// Triple Triplets, e.g. 111m111p111s,
-        /// and Mixed Triple Sequence, e.g. 123m123p123s.
+        /// Triple Triplets, e.g. 111m111p111s.
         /// </summary>
-        private void Triple() {
+        private void TripleTriplets() {
             const int Flag = 0b1000000001000000001;
             var tripletFlag = 0;
-            var sequenceFlag = 0;
 
             foreach (var meld in decompose) {
-                if (meld.Type == MeldType.Sequence) {
-                    sequenceFlag |= 1 << Tile.GetIndex(meld.Tiles[0]);
-                }
                 if ((meld.Type == MeldType.Triplet || meld.Type == MeldType.Quad) && !meld.IsHonor) {
                     tripletFlag |= 1 << Tile.GetIndex(meld.Tiles[0]);
                 }
             }
 
-            Debug.Assert(tripletFlag >= 0 && sequenceFlag >= 0,
-                "Only 27 flag bits, this number should not be less than 0.");
+            Debug.Assert(tripletFlag >= 0, "Only 27 flag bits, this number should not be less than 0.");
 
             for (var i = 0; i < 9; i++) {
                 if ((tripletFlag & Flag) == Flag) {
@@ -310,7 +306,25 @@ namespace MahjongScorer {
                     return;
                 }
                 tripletFlag >>= 1;
+            }
+        }
 
+        /// <summary>
+        /// Mixed Triple Sequence, e.g. 123m123p123s.
+        /// </summary>
+        private void MixedTripleSequence() {
+            const int Flag = 0b1000000001000000001;
+            var sequenceFlag = 0;
+
+            foreach (var meld in decompose) {
+                if (meld.Type == MeldType.Sequence) {
+                    sequenceFlag |= 1 << Tile.GetIndex(meld.Tiles[0]);
+                }
+            }
+
+            Debug.Assert(sequenceFlag >= 0, "Only 27 flag bits, this number should not be less than 0.");
+
+            for (var i = 0; i < 9; i++) {
                 if ((sequenceFlag & Flag) == Flag) {
                     result.Add(new YakuValue(YakuType.MixedTripleSequence, hand.Menzenchin ? 2 : 1));
                     return;
@@ -456,35 +470,42 @@ namespace MahjongScorer {
         /// Half Flush, Full Flush, or All Honors.
         /// </summary>
         private void FlushOrAllHonors() {
-            var arr = new bool[4];
+            var flag = 0;
+            var hasZ = false;
 
             foreach (var meld in decompose) {
                 switch (meld.Suit) {
                 case Suit.M:
-                    arr[(int)Suit.M] = true;
+                    flag |= 1;
                     break;
                 case Suit.P:
-                    arr[(int)Suit.P] = true;
+                    flag |= 1 << 1;
                     break;
                 case Suit.S:
-                    arr[(int)Suit.S] = true;
+                    flag |= 1 << 2;
                     break;
                 case Suit.Z:
-                    arr[(int)Suit.Z] = true;
+                    flag |= 1 << 3;
+                    hasZ = true;
                     break;
                 }
             }
 
-            var count = arr.Count(b => b);
+            var count = 0;
+            while (flag != 0) {
+                flag &= flag - 1;
+                count++;
+            }
+
             if (count == 1) {
-                if (arr[(int)Suit.Z]) {
+                if (hasZ) {
                     result.Add(new YakuValue(YakuType.AllHonors, 1, true));
                 }
                 else {
                     result.Add(new YakuValue(YakuType.FullFlush, hand.Menzenchin ? 6 : 5));
                 }
             }
-            else if (count == 2 && arr[(int)Suit.Z]) {
+            else if (count == 2 && hasZ) {
                 result.Add(new YakuValue(YakuType.HalfFlush, hand.Menzenchin ? 3 : 2));
             }
         }
@@ -613,7 +634,7 @@ namespace MahjongScorer {
         /// 4 Little Winds or 4 Big Winds.
         /// </summary>
         private void FourWinds() {
-            const int Flag = 15;
+            const int Flag = 0b1111;
             var tripletFlag = 0;
             var pairFlag = 0;
 
@@ -647,10 +668,10 @@ namespace MahjongScorer {
         /// </summary>
         private void AllGreen() {
             var counts = TileMaker.CountMeldTiles(decompose);
-            var green = TileMaker.GetGreenTiles();
+            var greens = TileMaker.GreenTiles;
 
             for (var i = 0; i < counts.Length; i++) {
-                if (!green.Contains(i) && counts[i] > 0) {
+                if (!greens.Contains(i) && counts[i] > 0) {
                     return;
                 }
             }

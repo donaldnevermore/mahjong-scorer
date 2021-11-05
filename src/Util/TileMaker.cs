@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using MahjongScorer.Domain;
 
 namespace MahjongScorer.Util {
-    public static class TileMaker {
+    public class TileMaker {
+        public static readonly int[] GreenTiles = GetGreenTiles();
+
         public static HandInfo GetHandInfo(string handTiles, string winningTile, string openMelds) {
             var h = ConvertTiles(handTiles).ToArray();
             var w = ConvertTile(winningTile);
@@ -122,14 +124,14 @@ namespace MahjongScorer.Util {
         }
 
         public static int[] CountMeldTiles(List<Meld> melds) {
-            var array = new int[34];
+            var arr = new int[34];
             foreach (var meld in melds) {
                 foreach (var tile in meld.Tiles) {
-                    array[Tile.GetIndex(tile)]++;
+                    arr[Tile.GetIndex(tile)]++;
                 }
             }
 
-            return array;
+            return arr;
         }
 
         /// <summary>
@@ -146,26 +148,7 @@ namespace MahjongScorer.Util {
             return arr;
         }
 
-        public static Tile[] GetFullTiles() {
-            var list = new List<Tile>();
-
-            for (var i = 0; i < 4; i++) {
-                for (var rank = 1; rank <= 9; rank++) {
-                    list.Add(new Tile(Suit.M, rank));
-                    list.Add(new Tile(Suit.P, rank));
-                    list.Add(new Tile(Suit.S, rank));
-
-                    // There are 7 kinds of Wind & Dragon tiles only.
-                    if (rank <= 7) {
-                        list.Add(new Tile(Suit.Z, rank));
-                    }
-                }
-            }
-
-            return list.ToArray();
-        }
-
-        public static int[] GetGreenTiles() {
+        private static int[] GetGreenTiles() {
             var tiles = new Tile[] {
                 new(Suit.S, 2),
                 new(Suit.S, 3),
