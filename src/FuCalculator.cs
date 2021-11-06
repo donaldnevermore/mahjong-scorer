@@ -24,16 +24,16 @@ namespace MahjongScorer {
                 return result;
             }
 
-            var isPinfuShape = YakuCalculator.IsPinfuShape(decompose, winningTile, round);
+            var isPinfuLike = YakuCalculator.IsPinfuLike(decompose, winningTile, round);
 
             // Pinfu Tsumo
-            if (isPinfuShape && hand.Menzenchin && hand.Tsumo) {
+            if (isPinfuLike && hand.Menzenchin && hand.Tsumo) {
                 result.Add(new FuValue(FuType.PinfuTsumo, 20));
                 return result;
             }
 
             // Pinfu Ron with an Open Hand (Tsumo is also OK)
-            if (isPinfuShape && !hand.Menzenchin) {
+            if (isPinfuLike && !hand.Menzenchin) {
                 result.Add(new FuValue(FuType.PinfuRonWithAnOpenHand, 30));
                 return result;
             }
@@ -41,7 +41,7 @@ namespace MahjongScorer {
             // Base Fu
             result.Add(new FuValue(FuType.BaseFu, 20));
 
-            CountWaitingPattern(decompose, winningTile, hand, result);
+            CountWaitingPattern(decompose, winningTile, isPinfuLike, hand, result);
             CountMeldPattern(decompose, winningTile, hand, round, rule, result);
 
             return result;
@@ -127,14 +127,19 @@ namespace MahjongScorer {
         }
 
         private static void CountWaitingPattern(List<Meld> decompose, Tile winningTile,
-            HandConfig hand, List<FuValue> result) {
-            // Tsumo
+            bool isPinfuLike, HandConfig hand, List<FuValue> result) {
             if (hand.Tsumo) {
+                // Tsumo
                 result.Add(new FuValue(FuType.Tsumo, 2));
             }
             else if (hand.Menzenchin) {
                 // Menzenchin Ron
                 result.Add(new FuValue(FuType.MenzenchinRon, 10));
+            }
+
+            // Pinfu is double-sided waiting, so no Fu added.
+            if (isPinfuLike) {
+                return;
             }
 
             // Waiting pattern

@@ -75,6 +75,37 @@ namespace MahjongScorer.Domain {
         /// </summary>
         public bool IsHonor => Tiles[0].IsHonor;
 
+        public bool IsTripletLike() {
+            return Type == MeldType.Triplet || Type == MeldType.Quad;
+        }
+
+        public bool IsDoubleSidedIgnoreColor(Tile tile) {
+            if (Type != MeldType.Sequence) {
+                return false;
+            }
+            if (!Tiles[0].EqualsIgnoreColor(tile) && !Tiles[^1].EqualsIgnoreColor(tile)) {
+                return false;
+            }
+            if (tile.Rank != 3 && tile.Rank != 7) {
+                return true;
+            }
+            if (tile.Rank == 3 && Tiles[0].Rank == 1) {
+                return false;
+            }
+            if (tile.Rank == 7 && Tiles[^1].Rank == 9) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool ContainsIgnoreColor(Tile tile) {
+            if (Suit != tile.Suit) {
+                return false;
+            }
+            return tile.Rank >= Tiles[0].Rank && tile.Rank <= Tiles[^1].Rank;
+        }
+
         public int CompareTo(Meld? other) {
             if (other is null) {
                 throw new ArgumentException(nameof(other));
@@ -136,33 +167,6 @@ namespace MahjongScorer.Domain {
 
         public override int GetHashCode() {
             return ToString().GetHashCode();
-        }
-
-        public bool IsDoubleSidedIgnoreColor(Tile tile) {
-            if (Type != MeldType.Sequence) {
-                return false;
-            }
-            if (!Tiles[0].EqualsIgnoreColor(tile) && !Tiles[^1].EqualsIgnoreColor(tile)) {
-                return false;
-            }
-            if (tile.Rank != 3 && tile.Rank != 7) {
-                return true;
-            }
-            if (tile.Rank == 3 && Tiles[0].Rank == 1) {
-                return false;
-            }
-            if (tile.Rank == 7 && Tiles[^1].Rank == 9) {
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool ContainsIgnoreColor(Tile tile) {
-            if (Suit != tile.Suit) {
-                return false;
-            }
-            return tile.Rank >= Tiles[0].Rank && tile.Rank <= Tiles[^1].Rank;
         }
     }
 }

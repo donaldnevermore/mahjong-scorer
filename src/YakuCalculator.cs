@@ -118,12 +118,12 @@ namespace MahjongScorer {
                 return;
             }
 
-            if (IsPinfuShape(decompose, winningTile, round)) {
+            if (IsPinfuLike(decompose, winningTile, round)) {
                 result.Add(new YakuValue(YakuType.Pinfu, 1));
             }
         }
 
-        public static bool IsPinfuShape(List<Meld> decompose, Tile winningTile, RoundConfig round) {
+        public static bool IsPinfuLike(List<Meld> decompose, Tile winningTile, RoundConfig round) {
             var sequenceCount = 0;
             var doubleSided = false;
 
@@ -153,7 +153,7 @@ namespace MahjongScorer {
         /// </summary>
         private void Yakuhai() {
             foreach (var meld in decompose) {
-                if (!meld.IsHonor || (meld.Type != MeldType.Triplet && meld.Type != MeldType.Quad)) {
+                if (!meld.IsHonor || !meld.IsTripletLike()) {
                     continue;
                 }
 
@@ -289,47 +289,51 @@ namespace MahjongScorer {
         /// Triple Triplets, e.g. 111m111p111s.
         /// </summary>
         private void TripleTriplets() {
-            const int Flag = 0b1000000001000000001;
-            var tripletFlag = 0;
+            var list = new List<Tile>();
 
             foreach (var meld in decompose) {
-                if ((meld.Type == MeldType.Triplet || meld.Type == MeldType.Quad) && !meld.IsHonor) {
-                    tripletFlag |= 1 << Tile.GetIndex(meld.Tiles[0]);
+                if (meld.IsHonor || !meld.IsTripletLike()) {
+                    continue;
+                }
+
+                var first = meld.Tiles[0];
+                if (DifferentSuitSameRank(first, list)) {
+                    list.Add(first);
                 }
             }
 
-            Debug.Assert(tripletFlag >= 0, "Only 27 flag bits, this number should not be less than 0.");
-
-            for (var i = 0; i < 9; i++) {
-                if ((tripletFlag & Flag) == Flag) {
-                    result.Add(new YakuValue(YakuType.TripleTriplets, 2));
-                    return;
-                }
-                tripletFlag >>= 1;
+            if (list.Count == 3) {
+                result.Add(new YakuValue(YakuType.TripleTriplets, 2));
             }
+        }
+
+        private static bool DifferentSuitSameRank(Tile tile, List<Tile> list) {
+            foreach (var t in list) {
+                if (tile.Suit == t.Suit || tile.Rank != t.Rank) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
         /// Mixed Triple Sequence, e.g. 123m123p123s.
         /// </summary>
         private void MixedTripleSequence() {
-            const int Flag = 0b1000000001000000001;
-            var sequenceFlag = 0;
+            var list = new List<Tile>();
 
             foreach (var meld in decompose) {
                 if (meld.Type == MeldType.Sequence) {
-                    sequenceFlag |= 1 << Tile.GetIndex(meld.Tiles[0]);
+                    var first = meld.Tiles[0];
+                    if (DifferentSuitSameRank(first, list)) {
+                        list.Add(first);
+                    }
                 }
             }
 
-            Debug.Assert(sequenceFlag >= 0, "Only 27 flag bits, this number should not be less than 0.");
-
-            for (var i = 0; i < 9; i++) {
-                if ((sequenceFlag & Flag) == Flag) {
-                    result.Add(new YakuValue(YakuType.MixedTripleSequence, hand.Menzenchin ? 2 : 1));
-                    return;
-                }
-                sequenceFlag >>= 1;
+            if (list.Count == 3) {
+                result.Add(new YakuValue(YakuType.MixedTripleSequence, hand.Menzenchin ? 2 : 1));
             }
         }
 
@@ -427,8 +431,7 @@ namespace MahjongScorer {
             }
 
             if (decompose.All(meld => meld.Type == MeldType.Pair ||
-                meld.Type == MeldType.Triplet ||
-                meld.Type == MeldType.Quad)) {
+                meld.IsTripletLike())) {
                 result.Add(new YakuValue(YakuType.AllTriplets, 2));
             }
         }
@@ -437,20 +440,24 @@ namespace MahjongScorer {
         /// 4 Concealed Triplets, 3 Concealed Triplets, or Single-wait 4 Concealed Triplets.
         /// </summary>
         private void ConcealedTriplets() {
-            var count = decompose.Count(meld =>
-                !meld.IsOpen && (meld.Type == MeldType.Triplet || meld.Type == MeldType.Quad));
+            var nonOpenCount = 0;
+            var containsWinningTile = false;
 
-            Debug.Assert(count <= 4, "There could not be more than 4 triplets in a complete hand.");
+            foreach (var meld in decompose) {
+                if (!meld.IsOpen && meld.IsTripletLike()) {
+                    nonOpenCount++;
+                    if (meld.ContainsIgnoreColor(winningTile)) {
+                        containsWinningTile = true;
+                    }
+                }
+            }
 
-            // Winning tile in Triplet or Quad.
-            var containsWinningTile = decompose.Any(meld =>
-                !meld.IsOpen &&
-                (meld.Type == MeldType.Triplet || meld.Type == MeldType.Quad) &&
-                meld.ContainsIgnoreColor(winningTile));
-            var hasOneOpen = !hand.Tsumo && containsWinningTile;
+            var ronTriplet = !hand.Tsumo && containsWinningTile;
 
-            if (count == 4) {
-                if (hasOneOpen) {
+            // If you have 4 non-open (including the one from Ron) triplets,
+            // you must be in Menzenchin status.
+            if (nonOpenCount == 4 && hand.Menzenchin) {
+                if (ronTriplet) {
                     result.Add(new YakuValue(YakuType.ThreeConcealedTriplets, 2));
                 }
                 else if (containsWinningTile) {
@@ -461,7 +468,7 @@ namespace MahjongScorer {
                         rule.AllowDoubleYakuman ? 2 : 1, true));
                 }
             }
-            else if (count == 3 && !hasOneOpen) {
+            else if (nonOpenCount == 3 && !ronTriplet) {
                 result.Add(new YakuValue(YakuType.ThreeConcealedTriplets, 2));
             }
         }
@@ -470,42 +477,36 @@ namespace MahjongScorer {
         /// Half Flush, Full Flush, or All Honors.
         /// </summary>
         private void FlushOrAllHonors() {
-            var flag = 0;
-            var hasZ = false;
+            var arr = new bool[4];
 
             foreach (var meld in decompose) {
                 switch (meld.Suit) {
                 case Suit.M:
-                    flag |= 1;
+                    arr[0] = true;
                     break;
                 case Suit.P:
-                    flag |= 1 << 1;
+                    arr[1] = true;
                     break;
                 case Suit.S:
-                    flag |= 1 << 2;
+                    arr[2] = true;
                     break;
                 case Suit.Z:
-                    flag |= 1 << 3;
-                    hasZ = true;
+                    arr[3] = true;
                     break;
                 }
             }
 
-            var count = 0;
-            while (flag != 0) {
-                flag &= flag - 1;
-                count++;
-            }
-
+            // How many suits it has.
+            var count = arr.Count(b => b);
             if (count == 1) {
-                if (hasZ) {
+                if (arr[3]) {
                     result.Add(new YakuValue(YakuType.AllHonors, 1, true));
                 }
                 else {
                     result.Add(new YakuValue(YakuType.FullFlush, hand.Menzenchin ? 6 : 5));
                 }
             }
-            else if (count == 2 && hasZ) {
+            else if (count == 2 && arr[3]) {
                 result.Add(new YakuValue(YakuType.HalfFlush, hand.Menzenchin ? 3 : 2));
             }
         }
@@ -575,6 +576,9 @@ namespace MahjongScorer {
         /// 13 Orphans or 13-wait 13 Orphans
         /// </summary>
         private void ThirteenOrphans() {
+            if (!hand.Menzenchin) {
+                return;
+            }
             if (decompose.Count != 13) {
                 return;
             }
