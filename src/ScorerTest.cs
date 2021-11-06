@@ -289,5 +289,214 @@ namespace MahjongScorer {
                 Assert.Fail();
             }
         }
+
+        [Test]
+        public void TestPureStraight() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("123456789m1234p", "1p", "", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(2, p.Han);
+            Assert.AreEqual(40, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(2600, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestTripleTriplets() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("222m222p2224567s", "7s", "", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(5, p.Han);
+            Assert.AreEqual(50, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(8000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestMixedTripleSequence() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("123m123p1234456s", "4s", "", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(3, p.Han);
+            Assert.AreEqual(30, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(3900, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestFullFlush() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("1235677891134m", "5m", "", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(7, p.Han);
+            Assert.AreEqual(30, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(12000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestHalfFlush() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("12356778934m11z", "5m", "", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(3, p.Han);
+            Assert.AreEqual(40, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(5200, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestConcealedTriplets1() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("222333m33p77s", "3p", "456so", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(1, p.Han);
+            Assert.AreEqual(30, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(1000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestConcealedTriplets2() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("222333m333p7s", "7s", "456so", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(3, p.Han);
+            Assert.AreEqual(40, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(5200, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestConcealedTriplets3() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("222333m333p7s", "7s", "444so", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(5, p.Han);
+            Assert.AreEqual(40, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(8000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestConcealedTriplets4() {
+            var hand = new HandConfig();
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("222333m333p4455s", "4s", "", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(5, p.Han);
+            Assert.AreEqual(50, p.Fu);
+
+            if (p is Ron r) {
+                Assert.AreEqual(8000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestConcealedTriplets5() {
+            var hand = new HandConfig { Tsumo = true };
+            var round = new RoundConfig { SeatWind = Wind.North };
+            var rule = new RuleConfig();
+
+            var p = Scorer.GetScore("222333m333p4455s", "4s", "", "",
+                hand, round, rule);
+            Console.WriteLine(p);
+
+            Assert.AreEqual(1, p.YakumanCount);
+
+            if (p is NonDealerTsumo r) {
+                Assert.AreEqual(32000, r.BaseGain);
+            }
+            else {
+                Assert.Fail();
+            }
+        }
     }
 }
