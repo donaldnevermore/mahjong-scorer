@@ -1,27 +1,27 @@
-﻿// Copyright (c) 2021 donaldnevermore
+// Copyright (c) 2021 donaldnevermore
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
-namespace MahjongScorer.Domain {
-    public enum Suit {
-        /// <summary>
-        /// Man (Characters)
-        /// </summary>
-        M,
+namespace MahjongScorer.Domain;
 
-        /// <summary>
-        /// Pin (Dots)
-        /// </summary>
-        P,
+public enum Suit {
+    /// <summary>
+    /// Man (Characters)
+    /// </summary>
+    M,
 
-        /// <summary>
-        /// Sou (Bamboos)
-        /// </summary>
-        S,
+    /// <summary>
+    /// Pin (Dots)
+    /// </summary>
+    P,
 
-        /// <summary>
-        /// Honor tiles (Wind/Dragon tiles)
-        /// </summary>
-        Z
-    }
+    /// <summary>
+    /// Sou (Bamboos)
+    /// </summary>
+    S,
+
+    /// <summary>
+    /// Honor tiles (Wind/Dragon tiles)
+    /// </summary>
+    Z
 }

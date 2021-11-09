@@ -1,35 +1,35 @@
-﻿// Copyright (c) 2021 donaldnevermore
+// Copyright (c) 2021 donaldnevermore
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
+namespace MahjongScorer.Domain;
+
 using System.Collections.Generic;
 
-namespace MahjongScorer.Domain {
-    public record HandInfo {
-        public Tile[] HandTiles { get; }
-        public Tile WinningTile { get; }
-        public List<Meld> OpenMelds { get; }
-        public Tile[] AllTiles { get; }
+public record HandInfo {
+    public Tile[] HandTiles { get; }
+    public Tile WinningTile { get; }
+    public List<Meld> OpenMelds { get; }
+    public Tile[] AllTiles { get; }
 
-        public HandInfo(Tile[] handTiles, Tile winningTile, List<Meld> openMelds) {
-            HandTiles = handTiles;
-            WinningTile = winningTile;
-            OpenMelds = openMelds;
+    public HandInfo(Tile[] handTiles, Tile winningTile, List<Meld> openMelds) {
+        HandTiles = handTiles;
+        WinningTile = winningTile;
+        OpenMelds = openMelds;
 
-            AllTiles = InitAllTiles();
+        AllTiles = InitAllTiles();
+    }
+
+    private Tile[] InitAllTiles() {
+        var list = new List<Tile>();
+        list.AddRange(HandTiles);
+        list.Add(WinningTile);
+
+        foreach (var meld in OpenMelds) {
+            list.AddRange(meld.Tiles);
         }
 
-        private Tile[] InitAllTiles() {
-            var list = new List<Tile>();
-            list.AddRange(HandTiles);
-            list.Add(WinningTile);
-
-            foreach (var meld in OpenMelds) {
-                list.AddRange(meld.Tiles);
-            }
-
-            list.Sort();
-            return list.ToArray();
-        }
+        list.Sort();
+        return list.ToArray();
     }
 }
