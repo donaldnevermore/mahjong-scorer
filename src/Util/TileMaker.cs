@@ -2,21 +2,14 @@
 // All rights reserved.
 // Licensed under the Apache License, Version 2.0. See the LICENSE file in the project root for more information.
 
+namespace MahjongScorer.Util;
+
 using System;
 using System.Collections.Generic;
 using MahjongScorer.Domain;
 
-namespace MahjongScorer.Util;
-
 public class TileMaker {
     public static readonly int[] GreenTiles = GetGreenTiles();
-
-    public static HandInfo GetHandInfo(string handTiles, string winningTile, string openMelds) {
-        var h = ConvertTiles(handTiles).ToArray();
-        var w = ConvertTile(winningTile);
-        var m = ConvertOpenMelds(openMelds);
-        return new HandInfo(h, w, m);
-    }
 
     /// <summary>
     /// Convert tile string to list of tiles.

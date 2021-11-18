@@ -9,10 +9,10 @@ using System.Linq;
 using MahjongScorer.Domain;
 
 public class DoraCalculator {
-    public static DoraInfo GetAllDora(Tile[] allTiles, List<Tile> doraIndicators, List<Tile> uraDoraIndicators) {
-        var doraCount = CountDora(allTiles, doraIndicators);
-        var uraDoraCount = CountDora(allTiles, uraDoraIndicators);
-        var redDora = CountRedDora(allTiles);
+    public static DoraInfo GetAllDora(HandInfo hand) {
+        var doraCount = CountDora(hand.AllTiles, hand.DoraIndicators);
+        var uraDoraCount = CountDora(hand.AllTiles, hand.UraDoraIndicators);
+        var redDora = CountRedDora(hand.AllTiles);
 
         return new DoraInfo { RedDora = redDora, Dora = doraCount, UraDora = uraDoraCount };
     }

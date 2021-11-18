@@ -13,17 +13,17 @@ using MahjongScorer.Util;
 
 public class YakuCalculator {
     private readonly List<Meld> decompose;
-    private readonly Tile winningTile;
-    private readonly HandConfig hand;
+    private readonly HandInfo hand;
+    private readonly HandConfig handConfig;
     private readonly RoundConfig round;
     private readonly RuleConfig rule;
     private readonly List<YakuValue> result = new();
 
-    public YakuCalculator(List<Meld> decompose, Tile winningTile, HandConfig hand, RoundConfig round,
-        RuleConfig rule) {
+    public YakuCalculator(List<Meld> decompose, HandInfo hand, HandConfig handConfig,
+        RoundConfig round, RuleConfig rule) {
         this.decompose = decompose;
-        this.winningTile = winningTile;
         this.hand = hand;
+        this.handConfig = handConfig;
         this.round = round;
         this.rule = rule;
     }
@@ -75,11 +75,11 @@ public class YakuCalculator {
     /// Riichi or Double Riichi.
     /// </summary>
     private void RiichiAndIppatsu() {
-        if (!hand.Menzenchin) {
+        if (!handConfig.Menzenchin) {
             return;
         }
 
-        switch (hand.Riichi) {
+        switch (handConfig.Riichi) {
         case RiichiStatus.Riichi:
             result.Add(new YakuValue(YakuType.Riichi, 1));
             Ippatsu();
@@ -97,7 +97,7 @@ public class YakuCalculator {
     /// After Riichi, you Tsumo or Ron before next time you draw a tile without anyone making a call.
     /// </summary>
     private void Ippatsu() {
-        if (hand.Ippatsu) {
+        if (handConfig.Ippatsu) {
             result.Add(new YakuValue(YakuType.Ippatsu, 1));
         }
     }
@@ -106,7 +106,7 @@ public class YakuCalculator {
     /// Menzenchin Tsumo
     /// </summary>
     private void MenzenchinTsumo() {
-        if (hand.Menzenchin && hand.Tsumo) {
+        if (handConfig.Menzenchin && handConfig.Tsumo) {
             result.Add(new YakuValue(YakuType.MenzenchinTsumo, 1));
         }
     }
@@ -115,11 +115,11 @@ public class YakuCalculator {
     /// 4 sequences + 1 non-Yakuhai pair, and the winning tile must be double-sided.
     /// </summary>
     private void Pinfu() {
-        if (!hand.Menzenchin) {
+        if (!handConfig.Menzenchin) {
             return;
         }
 
-        if (IsPinfuLike(decompose, winningTile, round)) {
+        if (IsPinfuLike(decompose, hand.WinningTile, round)) {
             result.Add(new YakuValue(YakuType.Pinfu, 1));
         }
     }
@@ -215,7 +215,7 @@ public class YakuCalculator {
     /// After a Kan.
     /// </summary>
     private void AfterAKan() {
-        if (hand.AfterAKan) {
+        if (handConfig.AfterAKan) {
             result.Add(new YakuValue(YakuType.AfterAKan, 1));
         }
     }
@@ -224,11 +224,11 @@ public class YakuCalculator {
     /// Under the Sea or River.
     /// </summary>
     private void Under() {
-        if (!hand.Under) {
+        if (!handConfig.Under) {
             return;
         }
 
-        if (hand.Tsumo) {
+        if (handConfig.Tsumo) {
             result.Add(new YakuValue(YakuType.UnderTheSea, 1));
         }
         else {
@@ -240,7 +240,7 @@ public class YakuCalculator {
     /// Robbing a Kan.
     /// </summary>
     private void RobbingAKan() {
-        if (hand.RobbingAKan) {
+        if (handConfig.RobbingAKan) {
             result.Add(new YakuValue(YakuType.RobbingAKan, 1));
         }
     }
@@ -249,7 +249,7 @@ public class YakuCalculator {
     /// 7 different pairs.
     /// </summary>
     private void SevenPairs() {
-        if (!hand.Menzenchin) {
+        if (!handConfig.Menzenchin) {
             return;
         }
         if (decompose.Count != 7) {
@@ -279,7 +279,7 @@ public class YakuCalculator {
 
         while (handFlag > 0) {
             if ((handFlag & Flag) == Flag) {
-                result.Add(new YakuValue(YakuType.PureStraight, hand.Menzenchin ? 2 : 1));
+                result.Add(new YakuValue(YakuType.PureStraight, handConfig.Menzenchin ? 2 : 1));
                 return;
             }
             handFlag >>= 9;
@@ -334,7 +334,7 @@ public class YakuCalculator {
         }
 
         if (list.Count == 3) {
-            result.Add(new YakuValue(YakuType.MixedTripleSequence, hand.Menzenchin ? 2 : 1));
+            result.Add(new YakuValue(YakuType.MixedTripleSequence, handConfig.Menzenchin ? 2 : 1));
         }
     }
 
@@ -355,10 +355,10 @@ public class YakuCalculator {
         }
 
         if (hasHonor) {
-            result.Add(new YakuValue(YakuType.HalfOutsideHand, hand.Menzenchin ? 2 : 1));
+            result.Add(new YakuValue(YakuType.HalfOutsideHand, handConfig.Menzenchin ? 2 : 1));
         }
         else {
-            result.Add(new YakuValue(YakuType.FullyOutsideHand, hand.Menzenchin ? 3 : 2));
+            result.Add(new YakuValue(YakuType.FullyOutsideHand, handConfig.Menzenchin ? 3 : 2));
         }
     }
 
@@ -390,7 +390,7 @@ public class YakuCalculator {
     /// Pure Double Sequence or Twice Pure Double Sequence.
     /// </summary>
     private void PureDoubleSequence() {
-        if (!hand.Menzenchin) {
+        if (!handConfig.Menzenchin) {
             return;
         }
 
@@ -447,17 +447,17 @@ public class YakuCalculator {
         foreach (var meld in decompose) {
             if (!meld.IsOpen && meld.IsTripletLike()) {
                 nonOpenCount++;
-                if (meld.ContainsIgnoreColor(winningTile)) {
+                if (meld.ContainsIgnoreColor(hand.WinningTile)) {
                     containsWinningTile = true;
                 }
             }
         }
 
-        var ronTriplet = !hand.Tsumo && containsWinningTile;
+        var ronTriplet = !handConfig.Tsumo && containsWinningTile;
 
         // If you have 4 non-open (including the one from Ron) triplets,
         // you must be in Menzenchin status.
-        if (nonOpenCount == 4 && hand.Menzenchin) {
+        if (nonOpenCount == 4 && handConfig.Menzenchin) {
             if (ronTriplet) {
                 result.Add(new YakuValue(YakuType.ThreeConcealedTriplets, 2));
             }
@@ -504,11 +504,11 @@ public class YakuCalculator {
                 result.Add(new YakuValue(YakuType.AllHonors, 1, true));
             }
             else {
-                result.Add(new YakuValue(YakuType.FullFlush, hand.Menzenchin ? 6 : 5));
+                result.Add(new YakuValue(YakuType.FullFlush, handConfig.Menzenchin ? 6 : 5));
             }
         }
         else if (count == 2 && arr[3]) {
-            result.Add(new YakuValue(YakuType.HalfFlush, hand.Menzenchin ? 3 : 2));
+            result.Add(new YakuValue(YakuType.HalfFlush, handConfig.Menzenchin ? 3 : 2));
         }
     }
 
@@ -561,7 +561,7 @@ public class YakuCalculator {
     /// Blessing of Heaven or Earth.
     /// </summary>
     private void Blessing() {
-        if (!hand.Tsumo || !hand.Menzenchin || !hand.Blessing) {
+        if (!handConfig.Tsumo || !handConfig.Menzenchin || !handConfig.Blessing) {
             return;
         }
 
@@ -577,7 +577,7 @@ public class YakuCalculator {
     /// 13 Orphans or 13-wait 13 Orphans
     /// </summary>
     private void ThirteenOrphans() {
-        if (!hand.Menzenchin) {
+        if (!handConfig.Menzenchin) {
             return;
         }
         if (decompose.Count != 13) {
@@ -585,7 +585,7 @@ public class YakuCalculator {
         }
 
         var pair = decompose.First(meld => meld.Type == MeldType.Pair);
-        if (pair.ContainsIgnoreColor(winningTile)) {
+        if (pair.ContainsIgnoreColor(hand.WinningTile)) {
             result.Add(new YakuValue(YakuType.ThirteenWaitThirteenOrphans,
                 rule.AllowDoubleYakuman ? 2 : 1, true));
         }
@@ -598,7 +598,7 @@ public class YakuCalculator {
     /// 9 Gates or True 9 Gates.
     /// </summary>
     private void NineGates() {
-        if (!hand.Menzenchin) {
+        if (!handConfig.Menzenchin) {
             return;
         }
 
@@ -625,7 +625,7 @@ public class YakuCalculator {
             }
         }
 
-        var isTrueNineGates = counts[winningTile.Rank - 1] == 2 || counts[winningTile.Rank - 1] == 4;
+        var isTrueNineGates = counts[hand.WinningTile.Rank - 1] == 2 || counts[hand.WinningTile.Rank - 1] == 4;
         if (isTrueNineGates) {
             result.Add(new YakuValue(YakuType.TrueNineGates,
                 rule.AllowDoubleYakuman ? 2 : 1, true));

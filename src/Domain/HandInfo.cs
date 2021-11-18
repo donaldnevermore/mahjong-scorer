@@ -10,12 +10,17 @@ public record HandInfo {
     public Tile[] HandTiles { get; }
     public Tile WinningTile { get; }
     public List<Meld> OpenMelds { get; }
+    public List<Tile> DoraIndicators { get; set; } = new();
+    public List<Tile> UraDoraIndicators { get; set; } = new();
     public Tile[] AllTiles { get; }
 
-    public HandInfo(Tile[] handTiles, Tile winningTile, List<Meld> openMelds) {
+    public HandInfo(Tile[] handTiles, Tile winningTile, List<Meld> openMelds,
+    List<Tile> doraIndicators, List<Tile> uraDoraIndicators) {
         HandTiles = handTiles;
         WinningTile = winningTile;
         OpenMelds = openMelds;
+        DoraIndicators = doraIndicators;
+        UraDoraIndicators = uraDoraIndicators;
 
         AllTiles = InitAllTiles();
     }

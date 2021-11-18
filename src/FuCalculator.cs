@@ -15,8 +15,8 @@ public class FuCalculator {
     /// Count Fu by taking the hand composition into consideration in terms of tile melds,
     /// wait patterns and/or win method.
     /// </summary>
-    public static List<FuValue> GetFuList(List<Meld> decompose, Tile winningTile,
-        HandConfig hand, RoundConfig round, RuleConfig rule) {
+    public static List<FuValue> GetFuList(List<Meld> decompose, Tile winningTile, HandConfig handConfig,
+        RoundConfig round, RuleConfig rule) {
         var result = new List<FuValue>();
 
         // 7 Pairs
@@ -28,13 +28,13 @@ public class FuCalculator {
         var isPinfuLike = YakuCalculator.IsPinfuLike(decompose, winningTile, round);
 
         // Pinfu Tsumo
-        if (isPinfuLike && hand.Menzenchin && hand.Tsumo) {
+        if (isPinfuLike && handConfig.Menzenchin && handConfig.Tsumo) {
             result.Add(new FuValue(FuType.PinfuTsumo, 20));
             return result;
         }
 
         // Pinfu Ron with an Open Hand (Tsumo is also OK)
-        if (isPinfuLike && !hand.Menzenchin) {
+        if (isPinfuLike && !handConfig.Menzenchin) {
             result.Add(new FuValue(FuType.PinfuRonWithAnOpenHand, 30));
             return result;
         }
@@ -42,8 +42,8 @@ public class FuCalculator {
         // Base Fu
         result.Add(new FuValue(FuType.BaseFu, 20));
 
-        CountWaitingPattern(decompose, winningTile, isPinfuLike, hand, result);
-        CountMeldPattern(decompose, winningTile, hand, round, rule, result);
+        CountWaitingPattern(decompose, winningTile, isPinfuLike, handConfig, result);
+        CountMeldPattern(decompose, winningTile, handConfig, round, rule, result);
 
         return result;
     }
@@ -57,10 +57,10 @@ public class FuCalculator {
         return NumberUtil.RoundUpToNextUnit(sum, 10);
     }
 
-    private static void CountMeldPattern(List<Meld> decompose, Tile winningTile,
-        HandConfig hand, RoundConfig round, RuleConfig rule, List<FuValue> result) {
+    private static void CountMeldPattern(List<Meld> decompose, Tile winningTile, HandConfig handConfig,
+        RoundConfig round, RuleConfig rule, List<FuValue> result) {
         foreach (var meld in decompose) {
-            var isOpen = meld.IsOpen || (!hand.Tsumo && meld.ContainsIgnoreColor(winningTile));
+            var isOpen = meld.IsOpen || (!handConfig.Tsumo && meld.ContainsIgnoreColor(winningTile));
 
             switch (meld.Type) {
             case MeldType.Pair:
@@ -127,13 +127,13 @@ public class FuCalculator {
         }
     }
 
-    private static void CountWaitingPattern(List<Meld> decompose, Tile winningTile,
-        bool isPinfuLike, HandConfig hand, List<FuValue> result) {
-        if (hand.Tsumo) {
+    private static void CountWaitingPattern(List<Meld> decompose, Tile winningTile, bool isPinfuLike,
+        HandConfig handConfig, List<FuValue> result) {
+        if (handConfig.Tsumo) {
             // Tsumo
             result.Add(new FuValue(FuType.Tsumo, 2));
         }
-        else if (hand.Menzenchin) {
+        else if (handConfig.Menzenchin) {
             // Menzenchin Ron
             result.Add(new FuValue(FuType.MenzenchinRon, 10));
         }

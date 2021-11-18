@@ -4,7 +4,6 @@
 
 namespace MahjongScorer;
 
-using System;
 using System.Linq;
 using MahjongScorer.Domain;
 using MahjongScorer.Point;
@@ -12,46 +11,44 @@ using MahjongScorer.Config;
 using MahjongScorer.Util;
 
 public static class Scorer {
-    public static PointInfo GetScore(string handTiles, string winningTile, string openMelds,
-        string doraIndicators, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
-        var handInfo = TileMaker.GetHandInfo(handTiles, winningTile, openMelds);
+    public static HandInfo GetHandInfo(string handTiles, string winningTile, string openMelds,
+        string doraIndicators) {
+        var hand = TileMaker.ConvertTiles(handTiles).ToArray();
+        var winning = TileMaker.ConvertTile(winningTile);
+        var open = TileMaker.ConvertOpenMelds(openMelds);
+
+        var dora = new List<Tile>();
+        var uraDora = new List<Tile>();
 
         if (!string.IsNullOrEmpty(doraIndicators)) {
             var s = doraIndicators.Split(',');
             if (s.Length == 2) {
-                handConfig.DoraIndicators = TileMaker.ConvertTiles(s[0]);
-                handConfig.UraDoraIndicators = TileMaker.ConvertTiles(s[1]);
+                dora = TileMaker.ConvertTiles(s[0]);
+                uraDora = TileMaker.ConvertTiles(s[1]);
             }
             else {
-                handConfig.DoraIndicators = TileMaker.ConvertTiles(s[0]);
+                dora = TileMaker.ConvertTiles(s[0]);
             }
         }
-
-        return GetHandScore(handInfo, handConfig, round, rule);
+        return new HandInfo(hand, winning, open, dora, uraDora);
     }
 
-    public static PointInfo GetHandScore(HandInfo handInfo, HandConfig handConfig,
-        RoundConfig round, RuleConfig rule) {
-        if (handInfo.OpenMelds.Any(meld => meld.IsOpen)) {
+    public static PointInfo GetHandScore(string handTiles, string winningTile, string openMelds,
+        string doraIndicators, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
+        var hand = GetHandInfo(handTiles, winningTile, openMelds, doraIndicators);
+
+        return GetScore(hand, handConfig, round, rule);
+    }
+
+    public static PointInfo GetScore(HandInfo hand, HandConfig handConfig, RoundConfig round,
+        RuleConfig rule) {
+        if (hand.OpenMelds.Any(meld => meld.IsOpen)) {
             handConfig.Menzenchin = false;
         }
 
-        var pc = new PointCalculator(handInfo, handConfig, round, rule);
+        var pc = new PointCalculator(hand, handConfig, round, rule);
         var pt = pc.GetTotalPoints();
         return pt;
-    }
-
-    public static void ShowScore(string handTiles, string winningTile, string openMelds,
-        string doraIndicators, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
-        var pt = GetScore(handTiles, winningTile,
-            openMelds, doraIndicators, handConfig, round, rule);
-        Console.WriteLine(pt);
-    }
-
-    public static void ShowHandScore(HandInfo handInfo, HandConfig handConfig,
-        RoundConfig round, RuleConfig rule) {
-        var pt = GetHandScore(handInfo, handConfig, round, rule);
-        Console.WriteLine(pt);
     }
 
     public static double[] GetActualPoint(int[] scores, int[] points, int returnPoint) {

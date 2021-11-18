@@ -13,7 +13,7 @@ using MahjongScorer.Point;
 using MahjongScorer.Util;
 
 public class PointCalculator {
-    private HandInfo handInfo;
+    private HandInfo hand;
     private HandConfig handConfig;
     private RoundConfig round;
     private RuleConfig rule;
@@ -25,15 +25,15 @@ public class PointCalculator {
     private const int Sanbaiman = 6000;
     private const int Yakuman = 8000;
 
-    public PointCalculator(HandInfo handInfo, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
-        this.handInfo = handInfo;
+    public PointCalculator(HandInfo hand, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
+        this.hand = hand;
         this.handConfig = handConfig;
         this.round = round;
         this.rule = rule;
     }
 
     public PointInfo GetTotalPoints() {
-        var decomposes = Decomposer.Decompose(handInfo);
+        var decomposes = Decomposer.Decompose(hand);
         if (decomposes.Count == 0) {
             return new PointInfo();
         }
@@ -52,8 +52,7 @@ public class PointCalculator {
     }
 
     private DoraInfo GetDoraInfo() {
-        return DoraCalculator.GetAllDora(handInfo.AllTiles, handConfig.DoraIndicators,
-            handConfig.UraDoraIndicators);
+        return DoraCalculator.GetAllDora(hand);
     }
 
     private PointInfo CountHanAndFu(List<Meld> decompose) {
@@ -111,13 +110,13 @@ public class PointCalculator {
                 basePoints = Mangan;
             }
             else {
-                // When han < 5, calculate base points.
-                var n = fu * (int)Math.Pow(2, han + 2);
-                if (rule.RoundUpMangan && n >= 1920) {
+                // When han < 5, calculate BP (base points).
+                var rawBP = fu * (int)Math.Pow(2, han + 2);
+                if (rule.RoundUpMangan && rawBP >= 1920) {
                     basePoints = Mangan;
                 }
                 else {
-                    basePoints = Math.Min(Mangan, n);
+                    basePoints = Math.Min(Mangan, rawBP);
                 }
             }
         }
@@ -188,14 +187,14 @@ public class PointCalculator {
     }
 
     private List<FuValue> GetFuList(List<Meld> decompose) {
-        return FuCalculator.GetFuList(decompose, handInfo.WinningTile, handConfig, round, rule);
+        return FuCalculator.GetFuList(decompose, hand.WinningTile, handConfig, round, rule);
     }
 
     /// <summary>
     /// Count Han, the main portion of scoring, as each yaku is assigned a value in terms of han.
     /// </summary>
     private List<YakuValue> GetYakuList(List<Meld> decompose) {
-        var yc = new YakuCalculator(decompose, handInfo.WinningTile, handConfig, round, rule);
+        var yc = new YakuCalculator(decompose, hand, handConfig, round, rule);
         return yc.GetYakuList();
     }
 

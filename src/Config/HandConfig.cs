@@ -4,14 +4,9 @@
 
 namespace MahjongScorer.Config;
 
-using System.Collections.Generic;
 using MahjongScorer.Domain;
 
-
 public class HandConfig {
-    public List<Tile> DoraIndicators { get; set; } = new();
-    public List<Tile> UraDoraIndicators { get; set; } = new();
-
     private RiichiStatus riichi = RiichiStatus.None;
     private bool blessing = false;
 
