@@ -24,8 +24,8 @@ public class ScorerTest {
 
         Assert.AreEqual(4, pt.Han);
         Assert.AreEqual(30, pt.Fu);
-        if (pt is NonDealerTsumo r) {
-            Assert.AreEqual(7900, r.BaseGain);
+        if (pt is NonDealerTsumo n) {
+            Assert.AreEqual(7900, n.BaseGain);
         }
         else {
             Assert.Fail();
@@ -34,17 +34,17 @@ public class ScorerTest {
 
     [Test]
     public void Test2() {
-        var hand = new HandConfig { Riichi = RiichiStatus.Riichi };
+        var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi };
         var round = new RoundConfig { SeatWind = Wind.West, RiichiBets = 1 };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("22789m067p34789s", "2s", "",
-            "3z,5m", hand, round, rule);
-        Console.WriteLine(p);
+        var hand = Scorer.GetHandInfo("22789m067p34789s", "2s", "", "3z,5m");
+        var pt = Scorer.GetScore(hand, handConfig, round, rule);
+        Console.WriteLine(pt);
 
-        Assert.AreEqual(3, p.Han);
-        Assert.AreEqual(30, p.Fu);
-        if (p is Ron r) {
+        Assert.AreEqual(3, pt.Han);
+        Assert.AreEqual(30, pt.Fu);
+        if (pt is Ron r) {
             Assert.AreEqual(3900, r.BaseGain);
         }
         else {
@@ -54,17 +54,17 @@ public class ScorerTest {
 
     [Test]
     public void Test3() {
-        var hand = new HandConfig { Riichi = RiichiStatus.Riichi };
+        var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi };
         var round = new RoundConfig { SeatWind = Wind.North, RiichiBets = 3, Honba = 1 };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("2245689m456p789s", "7m", "",
-            "9s,7p", hand, round, rule);
-        Console.WriteLine(p);
+        var hand = Scorer.GetHandInfo("2245689m456p789s", "7m", "", "9s,7p");
+        var pt = Scorer.GetScore(hand, handConfig, round, rule);
+        Console.WriteLine(pt);
 
-        Assert.AreEqual(1, p.Han);
-        Assert.AreEqual(40, p.Fu);
-        if (p is Ron r) {
+        Assert.AreEqual(1, pt.Han);
+        Assert.AreEqual(40, pt.Fu);
+        if (pt is Ron r) {
             Assert.AreEqual(1300, r.BaseGain);
         }
         else {
@@ -74,18 +74,18 @@ public class ScorerTest {
 
     [Test]
     public void Test4() {
-        var hand = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true };
+        var handConfig = new HandConfig { Riichi = RiichiStatus.Riichi, Tsumo = true };
         var round = new RoundConfig { RoundWind = Wind.South, SeatWind = Wind.North, RiichiBets = 1 };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("344056m789p2245s", "3s", "",
-            "8s,4p", hand, round, rule);
-        Console.WriteLine(p);
+        var hand = Scorer.GetHandInfo("344056m789p2245s", "3s", "", "8s,4p");
+        var pt = Scorer.GetScore(hand, handConfig, round, rule);
+        Console.WriteLine(pt);
 
-        Assert.AreEqual(4, p.Han);
-        Assert.AreEqual(20, p.Fu);
-        if (p is NonDealerTsumo r) {
-            Assert.AreEqual(5200, r.BaseGain);
+        Assert.AreEqual(4, pt.Han);
+        Assert.AreEqual(20, pt.Fu);
+        if (pt is NonDealerTsumo n) {
+            Assert.AreEqual(5200, n.BaseGain);
         }
         else {
             Assert.Fail();
@@ -94,17 +94,18 @@ public class ScorerTest {
 
     [Test]
     public void Test5() {
-        var hand = new HandConfig();
+        var handConfig = new HandConfig();
         var round = new RoundConfig { RoundWind = Wind.South };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("789m67p77s", "8p", "666zo,678so",
-            "9m9p", hand, round, rule);
-        Console.WriteLine(p);
 
-        Assert.AreEqual(1, p.Han);
-        Assert.AreEqual(30, p.Fu);
-        if (p is Ron r) {
+        var hand = Scorer.GetHandInfo("789m67p77s", "8p", "666zo,678so", "9m9p");
+        var pt = Scorer.GetScore(hand, handConfig, round, rule);
+        Console.WriteLine(pt);
+
+        Assert.AreEqual(1, pt.Han);
+        Assert.AreEqual(30, pt.Fu);
+        if (pt is Ron r) {
             Assert.AreEqual(1500, r.BaseGain);
         }
         else {
