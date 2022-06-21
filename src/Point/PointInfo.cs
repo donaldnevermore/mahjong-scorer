@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using MahjongScorer.Domain;
 
+/// <summary>
+/// For result display.
+/// </summary>
 public record PointInfo : IComparable<PointInfo> {
     public int BasePoints { get; init; } = 0;
     public int Han { get; init; } = 0;
@@ -16,7 +19,17 @@ public record PointInfo : IComparable<PointInfo> {
     public int YakumanCount { get; init; } = 0;
 
     public DoraInfo Dora { get; init; } = new();
+
+    /// <summary>
+    /// Honba 「本場」 is an added element to scoring, that awards bonus points for particular repeats.
+    /// When any non-dealer wins a hand, then the honba count resets back down to zero.
+    /// </summary>
     public int Honba { get; init; } = 0;
+
+    /// <summary>
+    /// The riichi announcer will places a bet of 1,000 points on the table.
+    /// This bet is collected by the next player to win a hand.
+    /// </summary>
     public int RiichiBets { get; init; } = 0;
 
     public List<YakuValue> YakuList { get; init; } = new();
