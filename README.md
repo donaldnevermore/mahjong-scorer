@@ -4,8 +4,8 @@ MahjongScorer is a C# library to help you calculate Han and/or Fu when playing R
 
 ## Getting Started
 
-1. make sure you have .NET 6.0 or above installed.
-2. run `dotnet test`.
+1. Make sure you have .NET 6.0 or above installed.
+2. Run `dotnet run` in the terminal.
 
 ## Examples
 
