@@ -11,11 +11,17 @@ using MahjongScorer.Config;
 using MahjongScorer.Util;
 
 public static class Scorer {
-    public static HandInfo GetHandInfo(string handTiles, string winningTile, string openMelds,
-        string doraIndicators) {
+    public static PointInfo GetHandScore(string handTiles, string winningTile, string melds,
+        string doraIndicators, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
+        var hand = GetHandInfo(handTiles, winningTile, melds, doraIndicators);
+
+        return GetScore(hand, handConfig, round, rule);
+    }
+
+    public static HandInfo GetHandInfo(string handTiles, string winningTile, string melds, string doraIndicators) {
         var hand = TileMaker.ConvertTiles(handTiles).ToArray();
         var winning = TileMaker.ConvertTile(winningTile);
-        var open = TileMaker.ConvertOpenMelds(openMelds);
+        var meldList = TileMaker.ConvertMelds(melds);
 
         var dora = new List<Tile>();
         var uraDora = new List<Tile>();
@@ -30,14 +36,7 @@ public static class Scorer {
                 dora = TileMaker.ConvertTiles(s[0]);
             }
         }
-        return new HandInfo(hand, winning, open, dora, uraDora);
-    }
-
-    public static PointInfo GetHandScore(string handTiles, string winningTile, string openMelds,
-        string doraIndicators, HandConfig handConfig, RoundConfig round, RuleConfig rule) {
-        var hand = GetHandInfo(handTiles, winningTile, openMelds, doraIndicators);
-
-        return GetScore(hand, handConfig, round, rule);
+        return new HandInfo(hand, winning, meldList, dora, uraDora);
     }
 
     public static PointInfo GetScore(HandInfo hand, HandConfig handConfig, RoundConfig round,

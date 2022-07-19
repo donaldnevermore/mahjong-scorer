@@ -30,17 +30,24 @@ public class TileMakerTest {
     }
 
     [Test]
-    public void TestConvertOpenMelds() {
-        var melds = TileMaker.ConvertOpenMelds("234m,234mo");
+    public void TestConvertMelds() {
+        var melds = TileMaker.ConvertMelds("234m;234m");
 
         var t1 = new Tile(Suit.M, 2);
         var t2 = new Tile(Suit.M, 3);
         var t3 = new Tile(Suit.M, 4);
-        var m1 = new Meld(false, t1, t2, t3);
-        var m2 = new Meld(true, t1, t2, t3);
+        var m1 = new Meld(true, t1, t2, t3);
+        var m2 = new Meld(false, t1, t2, t3);
 
         Assert.AreEqual(m1, melds[0]);
         Assert.AreEqual(m2, melds[1]);
+    }
+
+    [Test]
+    public void TestConvertNoMelds() {
+        var melds = TileMaker.ConvertMelds("");
+
+        Assert.AreEqual(0, melds.Count);
     }
 
     [Test]

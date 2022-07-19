@@ -70,39 +70,41 @@ public class TileMaker {
 
     /// <summary>
     /// Convert string array to open melds.
-    /// String not ending with an 'o' will be treated as closed meld.
-    /// Melds are separated by commas.
+    /// Melds are separated by commas, while closed melds are separated by a semi-colon.
     /// </summary>
-    /// <param name="s"></param>
+    /// <param name="melds"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static List<Meld> ConvertOpenMelds(string s) {
+    public static List<Meld> ConvertMelds(string s) {
         var list = new List<Meld>();
 
         if (string.IsNullOrEmpty(s)) {
             return list;
         }
 
-        var melds = s.Split(',');
-
-        foreach (var m in melds) {
-            var isOpen = false;
-            var meldStr = m;
-            if (m[^1] == 'o') {
-                meldStr = m[..^1];
-                isOpen = true;
+        var meldList = s.Split(';');
+        var len = meldList.Length > 2 ? 2 : meldList.Length;
+        for (var i = 0; i < len; i++) {
+            var elem = meldList[i];
+            if (string.IsNullOrEmpty(elem)) {
+                continue;
             }
 
-            var tiles = ConvertTiles(meldStr);
-            switch (tiles.Count) {
-            case 3:
-                list.Add(new Meld(isOpen, tiles[0], tiles[1], tiles[2]));
-                break;
-            case 4:
-                list.Add(new Meld(isOpen, tiles[0], tiles[1], tiles[2], tiles[3]));
-                break;
-            default:
-                throw new ArgumentException("Meld must have 3 or 4 tiles.");
+            var meld = elem.Split(',');
+            foreach (var v in meld) {
+                var isOpen = i == 0;
+                var tiles = ConvertTiles(v);
+
+                switch (tiles.Count) {
+                case 3:
+                    list.Add(new Meld(isOpen, tiles[0], tiles[1], tiles[2]));
+                    break;
+                case 4:
+                    list.Add(new Meld(isOpen, tiles[0], tiles[1], tiles[2], tiles[3]));
+                    break;
+                default:
+                    throw new ArgumentException("Meld must have 3 or 4 tiles.");
+                }
             }
         }
 

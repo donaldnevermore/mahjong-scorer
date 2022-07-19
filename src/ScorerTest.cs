@@ -99,7 +99,7 @@ public class ScorerTest {
         var rule = new RuleConfig();
 
 
-        var hand = Scorer.GetHandInfo("789m67p77s", "8p", "666zo,678so", "9m9p");
+        var hand = Scorer.GetHandInfo("789m67p77s", "8p", "666z,678s", "9m9p");
         var pt = Scorer.GetScore(hand, handConfig, round, rule);
         Console.WriteLine(pt);
 
@@ -119,8 +119,7 @@ public class ScorerTest {
         var round = new RoundConfig { RoundWind = Wind.South, RiichiBets = 1, Honba = 1 };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("34445m222p23467s", "5s", "",
-            "1z,3m", hand, round, rule);
+        var p = Scorer.GetHandScore("34445m222p23467s", "5s", "", "1z,3m", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(6, p.Han);
@@ -144,8 +143,7 @@ public class ScorerTest {
         };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("678m333567p2s", "2s", "067so",
-            "2m", hand, round, rule);
+        var p = Scorer.GetHandScore("678m333567p2s", "2s", "067s", "2m", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(2, p.Han);
@@ -168,8 +166,7 @@ public class ScorerTest {
         };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("1233344066m123s", "5m", "",
-            "0s9m5p,2m9p2s", hand, round, rule);
+        var p = Scorer.GetHandScore("1233344066m123s", "5m", "", "0s9m5p,2m9p2s", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(9, p.Han);
@@ -188,8 +185,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.West, RiichiBets = 1 };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("789p05577s11177z", "7z", "",
-            "6s,4s", hand, round, rule);
+        var p = Scorer.GetHandScore("789p05577s11177z", "7z", "", "6s,4s", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(13, p.Han);
@@ -208,8 +204,7 @@ public class ScorerTest {
         var round = new RoundConfig { RoundWind = Wind.South, SeatWind = Wind.South, RiichiBets = 2 };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("33444p33777s", "3s", "9999p",
-            "7p8s,4s2z", hand, round, rule);
+        var p = Scorer.GetHandScore("33444p33777s", "3s", ";9999p", "7p8s,4s2z", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(1, p.YakumanCount);
@@ -227,9 +222,7 @@ public class ScorerTest {
         var round = new RoundConfig();
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("0599s", "9s",
-            "5555zo,6666zo,7777zo", "5p4m8m0m",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("0599s", "9s", "5555z,6666z,7777z", "5p4m8m0m", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(1, p.YakumanCount);
@@ -247,8 +240,7 @@ public class ScorerTest {
         var round = new RoundConfig();
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("1112223334445z", "5z", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("1112223334445z", "5z", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(6, p.YakumanCount);
@@ -277,8 +269,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("112244m5566p778s", "8s", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("112244m5566p778s", "8s", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(2, p.Han);
@@ -298,8 +289,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("123456789m1234p", "1p", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("123456789m1234p", "1p", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(2, p.Han);
@@ -319,8 +309,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("222m222p2224567s", "7s", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("222m222p2224567s", "7s", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(5, p.Han);
@@ -340,8 +329,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("123m123p1234456s", "4s", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("123m123p1234456s", "4s", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(3, p.Han);
@@ -361,8 +349,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("1235677891134m", "5m", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("1235677891134m", "5m", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(7, p.Han);
@@ -382,8 +369,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("12356778934m11z", "5m", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("12356778934m11z", "5m", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(3, p.Han);
@@ -403,8 +389,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("222333m33p77s", "3p", "456so", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("222333m33p77s", "3p", "456s", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(1, p.Han);
@@ -424,8 +409,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("222333m333p7s", "7s", "456so", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("222333m333p7s", "7s", "456s", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(3, p.Han);
@@ -445,8 +429,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("222333m333p7s", "7s", "444so", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("222333m333p7s", "7s", "444s", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(5, p.Han);
@@ -466,8 +449,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("222333m333p4455s", "4s", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("222333m333p4455s", "4s", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(5, p.Han);
@@ -487,8 +469,7 @@ public class ScorerTest {
         var round = new RoundConfig { SeatWind = Wind.North };
         var rule = new RuleConfig();
 
-        var p = Scorer.GetHandScore("222333m333p4455s", "4s", "", "",
-            hand, round, rule);
+        var p = Scorer.GetHandScore("222333m333p4455s", "4s", "", "", hand, round, rule);
         Console.WriteLine(p);
 
         Assert.AreEqual(1, p.YakumanCount);
