@@ -26,8 +26,8 @@ public class HandConfig {
     /// </summary>
     public bool Tsumo { get; set; } = false;
 
-    public bool AfterAKan { get; set; } = false;
-    public bool RobbingAKan { get; set; } = false;
+    public bool AfterKan { get; set; } = false;
+    public bool RobbingKan { get; set; } = false;
 
     /// <summary>
     /// Blessing of Heaven or Earth.

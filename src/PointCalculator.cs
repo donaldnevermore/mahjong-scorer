@@ -82,7 +82,7 @@ public class PointCalculator {
 
         if (yakumanCount > 0) {
             // Handle Yakuman.
-            yakumanCount = rule.MultipleYakuman ? yakumanCount : 1;
+            yakumanCount = rule.StackingYakuman ? yakumanCount : 1;
             basePoints = Yakuman * yakumanCount;
             yakuList = yakuList.Where(yakuValue => yakuValue.IsYakuman).ToList();
             han = 0;

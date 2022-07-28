@@ -50,8 +50,8 @@ public class YakuCalculator {
         Yakuhai();
         Pinfu();
         PureDoubleSequence();
-        RobbingAKan();
-        AfterAKan();
+        RobbingKan();
+        AfterKan();
         Under();
         TripleTriplets();
         MixedTripleSequence();
@@ -214,9 +214,9 @@ public class YakuCalculator {
     /// <summary>
     /// After a Kan.
     /// </summary>
-    private void AfterAKan() {
-        if (handConfig.AfterAKan) {
-            result.Add(new YakuValue(YakuType.AfterAKan, 1));
+    private void AfterKan() {
+        if (handConfig.AfterKan) {
+            result.Add(new YakuValue(YakuType.AfterKan, 1));
         }
     }
 
@@ -239,9 +239,9 @@ public class YakuCalculator {
     /// <summary>
     /// Robbing a Kan.
     /// </summary>
-    private void RobbingAKan() {
-        if (handConfig.RobbingAKan) {
-            result.Add(new YakuValue(YakuType.RobbingAKan, 1));
+    private void RobbingKan() {
+        if (handConfig.RobbingKan) {
+            result.Add(new YakuValue(YakuType.RobbingKan, 1));
         }
     }
 
@@ -466,7 +466,7 @@ public class YakuCalculator {
             }
             else {
                 result.Add(new YakuValue(YakuType.SingleWaitFourConcealedTriplets,
-                    rule.AllowDoubleYakuman ? 2 : 1, true));
+                    rule.DoubleYakuman ? 2 : 1, true));
             }
         }
         else if (nonOpenCount == 3 && !ronTriplet) {
@@ -587,7 +587,7 @@ public class YakuCalculator {
         var pair = decompose.First(meld => meld.Type == MeldType.Pair);
         if (pair.ContainsIgnoreColor(hand.WinningTile)) {
             result.Add(new YakuValue(YakuType.ThirteenWaitThirteenOrphans,
-                rule.AllowDoubleYakuman ? 2 : 1, true));
+                rule.DoubleYakuman ? 2 : 1, true));
         }
         else {
             result.Add(new YakuValue(YakuType.ThirteenOrphans, 1, true));
@@ -628,7 +628,7 @@ public class YakuCalculator {
         var isTrueNineGates = counts[hand.WinningTile.Rank - 1] == 2 || counts[hand.WinningTile.Rank - 1] == 4;
         if (isTrueNineGates) {
             result.Add(new YakuValue(YakuType.TrueNineGates,
-                rule.AllowDoubleYakuman ? 2 : 1, true));
+                rule.DoubleYakuman ? 2 : 1, true));
         }
         else {
             result.Add(new YakuValue(YakuType.NineGates, 1, true));
@@ -661,7 +661,7 @@ public class YakuCalculator {
 
         if (tripletFlag == Flag) {
             result.Add(new YakuValue(YakuType.FourBigWinds,
-                rule.AllowDoubleYakuman ? 2 : 1, true));
+                rule.DoubleYakuman ? 2 : 1, true));
         }
         else if ((tripletFlag | pairFlag) == Flag && pairFlag != Flag) {
             result.Add(new YakuValue(YakuType.FourLittleWinds, 1, true));

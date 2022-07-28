@@ -7,7 +7,7 @@ namespace MahjongScorer.Config;
 public class RuleConfig {
     public bool DoubleWindFu { get; set; } = true;
     public bool AccumulatedYakuman { get; set; } = true;
-    public bool MultipleYakuman { get; set; } = true;
-    public bool AllowDoubleYakuman { get; set; } = true;
+    public bool StackingYakuman { get; set; } = true;
+    public bool DoubleYakuman { get; set; } = true;
     public bool RoundUpMangan { get; set; } = false;
 }

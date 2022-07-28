@@ -18,8 +18,8 @@ public enum YakuType {
 
     PureDoubleSequence,
     TwicePureDoubleSequence,
-    RobbingAKan,
-    AfterAKan,
+    RobbingKan,
+    AfterKan,
     UnderTheSea,
     UnderTheRiver,
     Ippatsu,
