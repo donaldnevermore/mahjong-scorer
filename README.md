@@ -1,11 +1,11 @@
 # MahjongScorer
 
-MahjongScorer is a C# library to help you calculate Han and/or Fu when playing Riichi Mahjong.
+MahjongScorer is a C# library to help you calculate the Han and Fu in Riichi Mahjong.
 
 ## Getting Started
 
-1. Make sure you have .NET 6.0 or above installed.
-2. Run `dotnet run` in the terminal.
+1. make sure you have .NET 7.0 or above installed.
+2. run `dotnet run` in the terminal.
 
 ## Examples
 
