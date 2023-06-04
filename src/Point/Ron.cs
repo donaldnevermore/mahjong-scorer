@@ -5,17 +5,19 @@
 namespace MahjongScorer.Point;
 
 public record Ron : PointInfo {
-    public int BasePay { get; init; } = 0;
-    public int BaseGain => BasePay;
+  public int BasePay { get; init; } = 0;
+  public int BaseGain => BasePay;
 
-    public int TotalPayOnOne => BaseGain + HonbaPay;
-    public int TotalGain => BaseGain + ExtraGain;
+  public int TotalPayOnOne => BaseGain + HonbaPay;
+  public int TotalGain => BaseGain + ExtraGain;
 
-    public override string ToString() {
-        var extraDetail = ExtraGain > 0 ? $"(+{ExtraGain})" : "";
-        var honbaDetail = HonbaPay > 0 ? $"(+{HonbaPay})" : "";
+  public override string ToString() {
+    var extraDetail = ExtraGain > 0 ? $"(+{ExtraGain})" : "";
+    var honbaDetail = HonbaPay > 0 ? $"(+{HonbaPay})" : "";
 
-        return base.ToString() +
-            $"Ron: {BaseGain}{extraDetail} - {BasePay}{honbaDetail}";
-    }
+    return $"""
+      {base.ToString()},
+      Ron: {BaseGain}{extraDetail} - {BasePay}{honbaDetail}
+      """;
+  }
 }
