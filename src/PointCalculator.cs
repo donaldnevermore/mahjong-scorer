@@ -68,8 +68,7 @@ public class PointCalculator {
         foreach (var yaku in yakuList) {
             if (yaku.IsYakuman) {
                 yakumanCount += yaku.Value;
-            }
-            else {
+            } else {
                 hanWithoutYakumanAndDora += yaku.Value;
             }
         }
@@ -88,34 +87,27 @@ public class PointCalculator {
             han = 0;
             fuList = new List<FuValue>();
             fu = 0;
-        }
-        else {
+        } else {
             han = hanWithoutYakumanAndDora + dora.TotalDora;
             fuList = GetFuList(decompose);
             fu = FuCalculator.CountFu(fuList);
 
             if (rule.AccumulatedYakuman && han >= 13) {
                 basePoints = Yakuman;
-            }
-            else if (han >= 11) {
+            } else if (han >= 11) {
                 basePoints = Sanbaiman;
-            }
-            else if (han >= 8) {
+            } else if (han >= 8) {
                 basePoints = Baiman;
-            }
-            else if (han >= 6) {
+            } else if (han >= 6) {
                 basePoints = Haneman;
-            }
-            else if (han >= 5) {
+            } else if (han >= 5) {
                 basePoints = Mangan;
-            }
-            else {
+            } else {
                 // When han < 5, calculate BP (base points).
                 var rawBP = fu * (int)Math.Pow(2, han + 2);
                 if (rule.RoundUpMangan && rawBP >= 1920) {
                     basePoints = Mangan;
-                }
-                else {
+                } else {
                     basePoints = Math.Min(Mangan, rawBP);
                 }
             }

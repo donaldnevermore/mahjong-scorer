@@ -26,8 +26,7 @@ public class ScorerTest {
         Assert.AreEqual(30, pt.Fu);
         if (pt is NonDealerTsumo n) {
             Assert.AreEqual(7900, n.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -46,8 +45,7 @@ public class ScorerTest {
         Assert.AreEqual(30, pt.Fu);
         if (pt is Ron r) {
             Assert.AreEqual(3900, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -66,8 +64,7 @@ public class ScorerTest {
         Assert.AreEqual(40, pt.Fu);
         if (pt is Ron r) {
             Assert.AreEqual(1300, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -86,8 +83,7 @@ public class ScorerTest {
         Assert.AreEqual(20, pt.Fu);
         if (pt is NonDealerTsumo n) {
             Assert.AreEqual(5200, n.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -107,8 +103,7 @@ public class ScorerTest {
         Assert.AreEqual(30, pt.Fu);
         if (pt is Ron r) {
             Assert.AreEqual(1500, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -126,8 +121,7 @@ public class ScorerTest {
         Assert.AreEqual(30, p.Fu);
         if (p is DealerTsumo r) {
             Assert.AreEqual(18000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -150,8 +144,7 @@ public class ScorerTest {
         Assert.AreEqual(30, p.Fu);
         if (p is Ron r) {
             Assert.AreEqual(2000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -173,8 +166,7 @@ public class ScorerTest {
         Assert.AreEqual(30, p.Fu);
         if (p is Ron r) {
             Assert.AreEqual(16000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -192,8 +184,7 @@ public class ScorerTest {
         Assert.AreEqual(50, p.Fu);
         if (p is NonDealerTsumo r) {
             Assert.AreEqual(32000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -210,8 +201,7 @@ public class ScorerTest {
         Assert.AreEqual(1, p.YakumanCount);
         if (p is NonDealerTsumo r) {
             Assert.AreEqual(32000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -228,8 +218,7 @@ public class ScorerTest {
         Assert.AreEqual(1, p.YakumanCount);
         if (p is Ron r) {
             Assert.AreEqual(48000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -246,8 +235,7 @@ public class ScorerTest {
         Assert.AreEqual(6, p.YakumanCount);
         if (p is DealerTsumo r) {
             Assert.AreEqual(288000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -277,8 +265,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(1600, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -297,8 +284,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(2600, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -317,8 +303,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(8000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -337,8 +322,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(3900, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -357,8 +341,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(12000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -377,8 +360,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(5200, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -397,8 +379,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(1000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -417,8 +398,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(5200, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -437,8 +417,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(8000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -457,8 +436,7 @@ public class ScorerTest {
 
         if (p is Ron r) {
             Assert.AreEqual(8000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }
@@ -476,8 +454,7 @@ public class ScorerTest {
 
         if (p is NonDealerTsumo r) {
             Assert.AreEqual(32000, r.BaseGain);
-        }
-        else {
+        } else {
             Assert.Fail();
         }
     }

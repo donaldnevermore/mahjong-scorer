@@ -230,8 +230,7 @@ public class YakuCalculator {
 
         if (handConfig.Tsumo) {
             result.Add(new YakuValue(YakuType.UnderTheSea, 1));
-        }
-        else {
+        } else {
             result.Add(new YakuValue(YakuType.UnderTheRiver, 1));
         }
     }
@@ -356,8 +355,7 @@ public class YakuCalculator {
 
         if (hasHonor) {
             result.Add(new YakuValue(YakuType.HalfOutsideHand, handConfig.Menzenchin ? 2 : 1));
-        }
-        else {
+        } else {
             result.Add(new YakuValue(YakuType.FullyOutsideHand, handConfig.Menzenchin ? 3 : 2));
         }
     }
@@ -380,8 +378,7 @@ public class YakuCalculator {
 
         if (hasHonor) {
             result.Add(new YakuValue(YakuType.AllTerminalsAndHonors, 2));
-        }
-        else {
+        } else {
             result.Add(new YakuValue(YakuType.AllTerminals, 1, true));
         }
     }
@@ -405,8 +402,7 @@ public class YakuCalculator {
 
                     // Toggle that bit, thus making it 0 again.
                     handFlag ^= tileFlag;
-                }
-                else {
+                } else {
                     handFlag |= tileFlag;
                 }
             }
@@ -416,8 +412,7 @@ public class YakuCalculator {
 
         if (count == 2) {
             result.Add(new YakuValue(YakuType.TwicePureDoubleSequence, 3));
-        }
-        else if (count == 1) {
+        } else if (count == 1) {
             result.Add(new YakuValue(YakuType.PureDoubleSequence, 1));
         }
     }
@@ -460,16 +455,13 @@ public class YakuCalculator {
         if (nonOpenCount == 4 && handConfig.Menzenchin) {
             if (ronTriplet) {
                 result.Add(new YakuValue(YakuType.ThreeConcealedTriplets, 2));
-            }
-            else if (containsWinningTile) {
+            } else if (containsWinningTile) {
                 result.Add(new YakuValue(YakuType.FourConcealedTriplets, 1, true));
-            }
-            else {
+            } else {
                 result.Add(new YakuValue(YakuType.SingleWaitFourConcealedTriplets,
                     rule.DoubleYakuman ? 2 : 1, true));
             }
-        }
-        else if (nonOpenCount == 3 && !ronTriplet) {
+        } else if (nonOpenCount == 3 && !ronTriplet) {
             result.Add(new YakuValue(YakuType.ThreeConcealedTriplets, 2));
         }
     }
@@ -502,12 +494,10 @@ public class YakuCalculator {
         if (count == 1) {
             if (arr[3]) {
                 result.Add(new YakuValue(YakuType.AllHonors, 1, true));
-            }
-            else {
+            } else {
                 result.Add(new YakuValue(YakuType.FullFlush, handConfig.Menzenchin ? 6 : 5));
             }
-        }
-        else if (count == 2 && arr[3]) {
+        } else if (count == 2 && arr[3]) {
             result.Add(new YakuValue(YakuType.HalfFlush, handConfig.Menzenchin ? 3 : 2));
         }
     }
@@ -519,8 +509,7 @@ public class YakuCalculator {
         var count = decompose.Count(meld => meld.Type == MeldType.Quad);
         if (count == 4) {
             result.Add(new YakuValue(YakuType.FourQuads, 1, true));
-        }
-        else if (count == 3) {
+        } else if (count == 3) {
             result.Add(new YakuValue(YakuType.ThreeQuads, 2));
         }
     }
@@ -551,8 +540,7 @@ public class YakuCalculator {
 
         if (tripletFlag == Flag) {
             result.Add(new YakuValue(YakuType.BigThreeDragons, 1, true));
-        }
-        else if ((tripletFlag | pairFlag) == Flag && pairFlag != Flag) {
+        } else if ((tripletFlag | pairFlag) == Flag && pairFlag != Flag) {
             result.Add(new YakuValue(YakuType.LittleThreeDragons, 2));
         }
     }
@@ -567,8 +555,7 @@ public class YakuCalculator {
 
         if (round.IsDealer) {
             result.Add(new YakuValue(YakuType.BlessingOfHeaven, 1, true));
-        }
-        else {
+        } else {
             result.Add(new YakuValue(YakuType.BlessingOfEarth, 1, true));
         }
     }
@@ -588,8 +575,7 @@ public class YakuCalculator {
         if (pair.ContainsIgnoreColor(hand.WinningTile)) {
             result.Add(new YakuValue(YakuType.ThirteenWaitThirteenOrphans,
                 rule.DoubleYakuman ? 2 : 1, true));
-        }
-        else {
+        } else {
             result.Add(new YakuValue(YakuType.ThirteenOrphans, 1, true));
         }
     }
@@ -629,8 +615,7 @@ public class YakuCalculator {
         if (isTrueNineGates) {
             result.Add(new YakuValue(YakuType.TrueNineGates,
                 rule.DoubleYakuman ? 2 : 1, true));
-        }
-        else {
+        } else {
             result.Add(new YakuValue(YakuType.NineGates, 1, true));
         }
     }
@@ -662,8 +647,7 @@ public class YakuCalculator {
         if (tripletFlag == Flag) {
             result.Add(new YakuValue(YakuType.FourBigWinds,
                 rule.DoubleYakuman ? 2 : 1, true));
-        }
-        else if ((tripletFlag | pairFlag) == Flag && pairFlag != Flag) {
+        } else if ((tripletFlag | pairFlag) == Flag && pairFlag != Flag) {
             result.Add(new YakuValue(YakuType.FourLittleWinds, 1, true));
         }
     }

@@ -35,8 +35,7 @@ public class Meld : IComparable<Meld> {
             IsOpen = isOpen;
             Type = MeldType.Triplet;
             Tiles = new[] { tile1, tile2, tile3 };
-        }
-        else {
+        } else {
             if (tile1.IsHonor) {
                 throw new ArgumentException("Suit of Z cannot form sequences.");
             }

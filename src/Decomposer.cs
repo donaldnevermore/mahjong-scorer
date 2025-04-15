@@ -74,8 +74,7 @@ public class Decomposer {
 
             if (suitCount[i] % 3 == 0) {
                 mentsuSuitCount++;
-            }
-            else if (suitCount[i] % 3 == 2) {
+            } else if (suitCount[i] % 3 == 2) {
                 pairSuit = i;
             }
         }

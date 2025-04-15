@@ -5,19 +5,19 @@
 namespace MahjongScorer.Point;
 
 public record DealerTsumo : PointInfo {
-  public int BasePayOnAll { get; init; } = 0;
-  public int BaseGain => BasePayOnAll * 3;
+    public int BasePayOnAll { get; init; } = 0;
+    public int BaseGain => BasePayOnAll * 3;
 
-  public int TotalPay => BasePayOnAll + HonbaPayOnAll;
-  public int TotalGain => BaseGain + ExtraGain;
+    public int TotalPay => BasePayOnAll + HonbaPayOnAll;
+    public int TotalGain => BaseGain + ExtraGain;
 
-  public override string ToString() {
-    var extraDetail = ExtraGain > 0 ? $"(+{ExtraGain})" : "";
-    var honbaDetail = HonbaPayOnAll > 0 ? $"(+{HonbaPayOnAll})" : "";
+    public override string ToString() {
+        var extraDetail = ExtraGain > 0 ? $"(+{ExtraGain})" : "";
+        var honbaDetail = HonbaPayOnAll > 0 ? $"(+{HonbaPayOnAll})" : "";
 
-    return $"""
+        return $"""
       {base.ToString()}
       DealerTsumo: {BaseGain}{extraDetail} - {BasePayOnAll}{honbaDetail} All
       """;
-  }
+    }
 }

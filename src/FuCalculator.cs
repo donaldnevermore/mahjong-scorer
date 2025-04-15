@@ -88,15 +88,12 @@ public class FuCalculator {
         if (rank >= 5 && rank <= 7) {
             // Dragon tiles
             result.Add(new FuValue(FuType.Dragon, 2));
-        }
-        else if (rank == seatWind && rank == roundWind) {
+        } else if (rank == seatWind && rank == roundWind) {
             // Double Wind
             result.Add(new FuValue(FuType.DoubleWind, rule.DoubleWindFu ? 4 : 2));
-        }
-        else if (rank == seatWind) {
+        } else if (rank == seatWind) {
             result.Add(new FuValue(FuType.SeatWind, 2));
-        }
-        else if (rank == roundWind) {
+        } else if (rank == roundWind) {
             result.Add(new FuValue(FuType.RoundWind, 2));
         }
     }
@@ -106,8 +103,7 @@ public class FuCalculator {
             result.Add(meld.IsYaochuu
                 ? new FuValue(FuType.OpenTripletYaochuu, 4)
                 : new FuValue(FuType.OpenTriplet, 2));
-        }
-        else {
+        } else {
             result.Add(meld.IsYaochuu
                 ? new FuValue(FuType.ClosedTripletYaochuu, 8)
                 : new FuValue(FuType.ClosedTriplet, 4));
@@ -119,8 +115,7 @@ public class FuCalculator {
             result.Add(meld.IsYaochuu
                 ? new FuValue(FuType.OpenQuadYaochuu, 16)
                 : new FuValue(FuType.OpenQuad, 8));
-        }
-        else {
+        } else {
             result.Add(meld.IsYaochuu
                 ? new FuValue(FuType.ClosedQuadYaochuu, 32)
                 : new FuValue(FuType.ClosedQuad, 16));
@@ -132,8 +127,7 @@ public class FuCalculator {
         if (handConfig.Tsumo) {
             // Tsumo
             result.Add(new FuValue(FuType.Tsumo, 2));
-        }
-        else if (handConfig.Menzenchin) {
+        } else if (handConfig.Menzenchin) {
             // Menzenchin Ron
             result.Add(new FuValue(FuType.MenzenchinRon, 10));
         }
@@ -156,9 +150,8 @@ public class FuCalculator {
             case MeldType.Sequence:
                 if (winningTile.EqualsIgnoreColor(meld.Tiles[1])) {
                     result.Add(new FuValue(FuType.MiddleWait, 2));
-                }
-                else if ((winningTile.Rank == 3 && meld.Tiles[0].Rank == 1) ||
-                    (winningTile.Rank == 7 && meld.Tiles[^1].Rank == 9)) {
+                } else if ((winningTile.Rank == 3 && meld.Tiles[0].Rank == 1) ||
+                      (winningTile.Rank == 7 && meld.Tiles[^1].Rank == 9)) {
                     result.Add(new FuValue(FuType.EndWait, 2));
                 }
                 break;

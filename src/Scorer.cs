@@ -31,8 +31,7 @@ public static class Scorer {
             if (s.Length == 2) {
                 dora = TileMaker.ConvertTiles(s[0]);
                 uraDora = TileMaker.ConvertTiles(s[1]);
-            }
-            else {
+            } else {
                 dora = TileMaker.ConvertTiles(s[0]);
             }
         }
